@@ -24,4 +24,11 @@ summarise, respondents are filtered as:
 
 ### What’s the difference between data analysts and data scientists?
 
+<br>
+
+Typically people think of data science as being paid more, so let’s take
+a look if that’s true\!
+
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+It looks like

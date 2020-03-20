@@ -4,7 +4,6 @@ output:
     github_document:
         html_preview: true
 ---
-
 <br>
 
 ```{r include=FALSE}
@@ -27,6 +26,9 @@ The pre-processing steps are executed in *prepare_data.r*. To summarise, respond
 * self-identified data analyst or data scientist
 
 ### What's the difference between data analysts and data scientists?
+<br>
+
+Typically people think of data science as being paid more, so let's take a look if that's true!
 
 ```{r}
 source("prepare_data.r")
@@ -46,4 +48,6 @@ data_jobs %>%
     )
 
 ```
+
+It looks like 
 
