@@ -1,31 +1,9 @@
 ### Ideas script ### 
 library(tidyverse)
 
-# Choose the columns we want
-
-columns <-  c("Respondent",
-                  "MainBranch",
-                  "Hobbyist",
-                  "OpenSourcer",
-                  "Employment",
-                  "Country",
-                  "UndergradMajor",
-                  "DevType",
-                  "YearsCode",
-                  "JobSat",
-                  "ConvertedComp",
-                  "WorkRemote",
-                  "LanguageWorkedWith",
-                  "LanguageDesireNextYear",
-                  "Age",
-                  "Gender",
-                  "Trans",
-                  "Sexuality")
-
 # Read the data in
 
 df <- read_csv("survey_results_public.csv") %>%
-    select(columns) %>%
     filter(Employment == "Employed full-time",
         ConvertedComp > 3e4,
         ConvertedComp < 2e6)
