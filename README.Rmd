@@ -1,4 +1,9 @@
-## **Analysing careers in data with the StackOverflow Developer Survey 2019**
+---
+title: "**Analysing careers in data with the StackOverflow Developer Survey 2019**"
+output:
+    github_document:
+        html_preview: true
+---
 
 <br>
 
