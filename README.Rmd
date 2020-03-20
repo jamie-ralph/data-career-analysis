@@ -1,0 +1,32 @@
+## **Analysing careers in data with the StackOverflow Developer Survey 2019**
+
+<br>
+
+```{r include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+This project was inspired by Julia Silge's amazing analysis of [gender and salary in
+the tech industry](https://juliasilge.com/blog/salary-gender/). There's a lot of cool
+analysis that can be done with the survey data, but I'll be focussing my analysis on
+"data" jobs - namely data analysts and data scientists. 
+
+```{r}
+source("prepare_data.r")
+
+library(tidyverse)
+
+data_jobs_UKIR %>%
+    ggplot(aes(ConvertedComp, colour = DevType, fill = DevType)) +
+    geom_density(alpha = 0.4, size = 1) +
+    scale_x_log10(labels = scales::dollar_format()) +
+    theme_minimal() +
+    labs(
+        x = "Salary (USD)",
+        y = "Density",
+        fill = "Developer type",
+        colour = "Developer type"
+    )
+
+```
+

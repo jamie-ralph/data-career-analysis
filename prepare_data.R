@@ -43,17 +43,6 @@ data_jobs_UKIR <- df %>%
     )) %>%
     filter(DevType != "Other")
 
-data_jobs_UKIR %>%
-    ggplot(aes(ConvertedComp, colour = DevType, fill = DevType)) +
-    geom_density(alpha = 0.4, size = 1) +
-    scale_x_log10(labels = scales::dollar_format()) +
-    theme_minimal() +
-    labs(
-        x = "Salary (USD)",
-        y = "Density",
-        fill = "Developer type",
-        colour = "Developer type"
-    )
     
 
 
