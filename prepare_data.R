@@ -11,7 +11,7 @@ df <- read_csv("survey_results_public.csv") %>%
 
 # Filter to just UK and Ireland data people
 
-data_jobs_UKIR <- df %>% 
+data_jobs <- df %>% 
     mutate(DevType = str_split(DevType, pattern = ";")) %>%
     unnest(DevType) %>%
     mutate(DevType = case_when(
