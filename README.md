@@ -17,7 +17,9 @@ The pre-processing steps are executed in *prepare\_data.r*. To
 summarise, respondents are filtered as:
 
   - salary above $30,000 and below $2,000,000
+
   - full-time only
+
   - self-identified data analyst or data scientist
 
 ### What’s the difference between data analysts and data scientists?
