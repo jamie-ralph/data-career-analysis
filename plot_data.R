@@ -25,7 +25,7 @@ box <- data_jobs %>%
     geom_boxplot(outlier.colour = NA) +
     theme_minimal(base_size = 12) +
     geom_jitter(alpha = 0.3, width = 0.2) +
-    scale_y_log10(labels = scales::dollar_format()) +
+    scale_y_log10(labels = scales::dollar_format(), position = "right") +
     labs(
         x = "",
         y = "Salary (USD)"

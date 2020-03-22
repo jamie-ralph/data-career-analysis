@@ -10,8 +10,12 @@ output:
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 ```
 
-In this project I'll use data from StackOverflow's 2019 Developer Survey to explore
-the characteristics of data analysts and data scientists. This project was inspired by Julia Silge's amazing analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/). 
+Data analysts and data scientists are in demand across industries. Usually the difference between these jobs is that data scientists use more machine learning and programming than analysts, but this boundary can sometimes become blurred. Here I'll use the StackOverflow 2019 Developer Survey to explore
+the characteristics of data analysts and data scientists, including **salary**, **contribution to open source**, and **coding as a hobby**. 
+
+<br>
+
+This project was inspired by Julia Silge's amazing analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) which I highly recommend! 
 
 The pre-processing steps are executed in *prepare_data.r*. To summarise, respondents are filtered as:
 
