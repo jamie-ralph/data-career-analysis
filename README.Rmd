@@ -34,6 +34,6 @@ The pre-processing steps are executed in *prepare_data.r*. To summarise, the dat
 source("prepare_data.r")
 source("plot_data.r")
 
-salary_grid
+salary_grid_1
 ```
 
