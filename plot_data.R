@@ -5,7 +5,7 @@ library(cowplot)
 
 hist_plot <- function(df) {
     ggplot(data = df, aes(x = ConvertedComp, y = DevType, fill = DevType)) +
-    geom_density_ridges(alpha = 1, size = 0.9) +
+    geom_density_ridges(alpha = 1, size = 0.25) +
     scale_x_log10(labels = scales::dollar_format()) +
     theme_minimal(base_size = 12) +
     labs(
