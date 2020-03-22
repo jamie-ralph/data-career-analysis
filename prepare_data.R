@@ -1,17 +1,26 @@
-### Ideas script ### 
+### Data preparation script ### 
 library(tidyverse)
 
-# Read the data in
+# Read in the data
 
 df <- read_csv("survey_results_public.csv") %>%
     filter(Employment == "Employed full-time",
         ConvertedComp > 3e4,
         ConvertedComp < 2e6)
 
+# Identify managers and academics
+
+managers <- df %>%
+    filter(str_detect(DevType, "Engineering manager|Product manager|Senior executive/VP"))
+
+academics <- df %>%
+    filter(str_detect(DevType, "Academic researcher|Scientist|Educator"))
 
 # Filter to just UK and Ireland data people
 
 data_jobs <- df %>% 
+    anti_join(managers) %>%
+    anti_join(academics) %>%
     mutate(DevType = str_split(DevType, pattern = ";")) %>%
     unnest(DevType) %>%
     mutate(DevType = case_when(
@@ -21,6 +30,16 @@ data_jobs <- df %>%
     )) %>%
     filter(DevType != "Other")
 
+# Filter the data_jobs dataframe to people who only selected one job type
+
+both_jobs <- data_jobs %>%
+    group_by(Respondent) %>%
+    summarise(Count = n()) %>%
+    filter(Count > 1) %>%
+    select(-Count)
+
+data_one_job <- data_jobs %>%
+    anti_join(both_jobs)
     
 
 

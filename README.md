@@ -1,16 +1,15 @@
-**Analysing careers in data with the StackOverflow Developer Survey
-2019**
+Analysing data jobs in industry
 ================
 
 <br>
 
-Data analysts and data scientists are in demand across industries.
-Usually the difference between these jobs is that data scientists use
-more machine learning and programming than analysts, but this boundary
-can sometimes become blurred. Here I’ll use the StackOverflow 2019
-Developer Survey to explore the characteristics of data analysts and
-data scientists, including **salary**, **contribution to open source**,
-and **coding as a hobby**.
+Data analysts and data scientists are in demand in many industries
+around the world. Since getting my first analyst job a couple of years
+ago I’ve wondered what really sets these roles (and the people who do
+them) apart. Here I’ll use the **StackOverflow 2019 Developer Survey**
+to explore the characteristics of data analysts and data scientists,
+including **salary**, **contribution to open source**, **coding
+languages used**, and **coding as a hobby**.
 
 <br>
 
@@ -20,13 +19,15 @@ industry](https://juliasilge.com/blog/salary-gender/) which I highly
 recommend\!
 
 The pre-processing steps are executed in *prepare\_data.r*. To
-summarise, respondents are filtered as:
+summarise, the data are prepared as follows:
 
-  - salary above q$30,000 and below $2,000,000
+  - salary above $30,000 and below $2,000,000
 
-  - full-time only
+  - full-time workers only
 
-  - self-identified data analyst or data scientist
+  - academics and upper management removed
+
+  - filtered to self-identified data analysts or data scientists
 
 #### What do data analysts and data scientists earn?
 

@@ -18,7 +18,7 @@ hist <- data_jobs %>%
         legend.position = "none"
     ) +
     scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
-                      values = c("#0ABDA0", "#FDA134"))
+                      values = c("#94D0FF", "#AD8CFF"))
 
 box <- data_jobs %>%
     ggplot(aes(DevType, ConvertedComp,  colour = DevType)) +
@@ -34,6 +34,6 @@ box <- data_jobs %>%
         legend.position = "none"
     ) +
     scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
-                        values = c("#0ABDA0", "#FDA134"))
+                        values = c("#94D0FF", "#AD8CFF"))
 
 salary_grid <- plot_grid(hist, box)
