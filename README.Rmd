@@ -23,7 +23,7 @@ The pre-processing steps are executed in *prepare_data.r*. To summarise, respond
 
 #### What do data analysts and data scientists earn?
 
-```{r}
+```{r, fig.width=10}
 source("prepare_data.r")
 source("plot_data.r")
 
