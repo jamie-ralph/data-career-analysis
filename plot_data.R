@@ -38,4 +38,4 @@ box_plot <- function(df) {
                         values = c("#94D0FF", "#AD8CFF"))
     }
 
-salary_grid_1 <- plot_grid(hist_plot(data_jobs), box_plot(data_jobs))
+salary_grid_1 <- plot_grid(hist_plot(df_one_job), box_plot(df_one_job))
