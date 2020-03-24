@@ -32,14 +32,14 @@ data_jobs <- df %>%
 
 # Filter the data_jobs dataframe to people who only selected one job type
 
-both_jobs <- data_jobs %>%
+df_both_jobs <- data_jobs %>%
     group_by(Respondent) %>%
     summarise(Count = n()) %>%
     filter(Count > 1) %>%
     select(-Count)
 
-data_one_job <- data_jobs %>%
-    anti_join(both_jobs)
+df_one_job <- data_jobs %>%
+    anti_join(df_both_jobs)
     
 
 
