@@ -3,6 +3,8 @@
 library(ggridges)
 library(cowplot)
 
+### Plotting overall salaries ###
+
 hist_plot <- function(df) {
     ggplot(data = df, aes(x = ConvertedComp, y = DevType, fill = DevType)) +
     geom_density_ridges(alpha = 1, size = 0.25) +
@@ -39,3 +41,24 @@ box_plot <- function(df) {
     }
 
 salary_grid_1 <- plot_grid(hist_plot(df_one_job), box_plot(df_one_job))
+
+### Plotting demographics ###
+
+gender_plot <- df_one_job %>%
+    filter(!is.na(Gender)) %>%
+    mutate(Gender = case_when(
+        str_detect(Gender, "Non-binary") ~ 
+            "Non-binary, genderqueer, or gender non-conforming",
+            TRUE ~ Gender
+    )) %>%
+    group_by(Gender, DevType) %>%
+    summarise(Count = n()) %>%
+    ggplot(aes(x = Gender, y = Count, fill = DevType)) + 
+    geom_col(position = "dodge") + 
+    theme_minimal() +
+    labs(
+        y = "Number of respondents"
+    ) +
+    scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
+                        values = c("#94D0FF", "#AD8CFF"))
+
