@@ -1,5 +1,6 @@
 ### Data preparation script ### 
 library(tidyverse)
+library(janitor)
 
 # Read in the data
 
