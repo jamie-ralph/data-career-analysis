@@ -1,5 +1,5 @@
 ---
-title: An exploratory analysis of data scientists and analysts working in industry (with a hint of predictive modelling)
+title: An exploratory analysis of data scientists and analysts working in industry (with a bit of predictive modelling)
 output:
     github_document:
         html_preview: true
@@ -19,7 +19,7 @@ In this project I'll be exploring the characteristics of data scientists and dat
 
 This project was inspired by Julia Silge's analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) which I highly recommend! 
 
-#### Preparing the data
+#### Notes on data preparation
 
 To fit a more accurate model of salary the data were filtered to:
 
@@ -31,7 +31,7 @@ To fit a more accurate model of salary the data were filtered to:
 
 Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(df_both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df_one_job)` responses, consisting of `r nrow(df_one_job[df_one_job$DevType == "Data scientist",])` data scientists and `r nrow(df_one_job[df_one_job$DevType == "Data analyst",])` data analysts. 
 
-The salaries used here are the converted US Dollary salaries provided by StackOverflow. 
+The salaries used here are the converted US Dollar salaries provided by StackOverflow. 
 
 ### Exploring the data
 
@@ -55,22 +55,29 @@ df_one_job %>%
     knitr::kable()
 ```
 
+<br>
 
-##### Gender identity
+#### How is gender identity represented in the responses?
 
-The data shows that the majority of respondents indentified as men. 
+<br>
+
+The data shows that the majority of respondents indentified as men. It's possible
+that women are under-represented in this sample, an issue that was identified for 
+the survey overall. 
 
 ```{r}
 df_one_job %>%
     mutate(Gender = case_when(
         str_detect(Gender, "Non-binary") ~ 
-            "Non-binary, genderqueer, \n or gender non-conforming",
+            "Non-binary/genderqueer/gender non-conforming",
         is.na(Gender) ~ "Not available",
         TRUE ~ Gender
     )) %>%
     tabyl(DevType, Gender) %>%
     adorn_percentages("row") %>%
     adorn_pct_formatting() %>%
-    as.data.frame() %>%
+    select(DevType, Man, Woman, `Non-binary/genderqueer/gender non-conforming`, `Not available`) %>%
     kableExtra::kable()
+
+gender_plot_salary
 ```

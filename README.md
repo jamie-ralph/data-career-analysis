@@ -1,5 +1,5 @@
 An exploratory analysis of data scientists and analysts working in
-industry (with a hint of predictive modelling)
+industry (with a bit of predictive modelling)
 ================
 
 <br>
@@ -14,7 +14,7 @@ This project was inspired by Julia Silge’s analysis of [gender and
 salary in the tech industry](https://juliasilge.com/blog/salary-gender/)
 which I highly recommend\!
 
-#### Preparing the data
+#### Notes on data preparation
 
 To fit a more accurate model of salary the data were filtered to:
 
@@ -35,7 +35,7 @@ with both labels. These responses were removed to focus the analysis on
 the differences between the two groups. This left 2326 responses,
 consisting of 1058 data scientists and 1268 data analysts.
 
-The salaries used here are the converted US Dollary salaries provided by
+The salaries used here are the converted US Dollar salaries provided by
 StackOverflow.
 
 ### Exploring the data
@@ -55,9 +55,15 @@ is slightly higher than for data analysts.
 | Data analyst   |       70580.5 |      30095 |    1750000 |
 | Data scientist |       83192.0 |      30051 |    1920000 |
 
-##### Gender identity
+<br>
 
-The data shows that the majority of respondents indentified as men.
+#### How is gender identity represented in the responses?
+
+<br>
+
+The data shows that the majority of respondents indentified as men. It’s
+possible that women are under-represented in this sample, an issue that
+was identified for the survey overall.
 
 <table>
 
@@ -79,19 +85,19 @@ Man
 
 <th style="text-align:left;">
 
-Non-binary, genderqueer, or gender non-conforming
+Woman
+
+</th>
+
+<th style="text-align:left;">
+
+Non-binary/genderqueer/gender non-conforming
 
 </th>
 
 <th style="text-align:left;">
 
 Not available
-
-</th>
-
-<th style="text-align:left;">
-
-Woman
 
 </th>
 
@@ -117,6 +123,12 @@ Data analyst
 
 <td style="text-align:left;">
 
+7.3%
+
+</td>
+
+<td style="text-align:left;">
+
 1.6%
 
 </td>
@@ -124,12 +136,6 @@ Data analyst
 <td style="text-align:left;">
 
 1.7%
-
-</td>
-
-<td style="text-align:left;">
-
-7.3%
 
 </td>
 
@@ -151,6 +157,12 @@ Data scientist
 
 <td style="text-align:left;">
 
+8.5%
+
+</td>
+
+<td style="text-align:left;">
+
 1.1%
 
 </td>
@@ -161,14 +173,10 @@ Data scientist
 
 </td>
 
-<td style="text-align:left;">
-
-8.5%
-
-</td>
-
 </tr>
 
 </tbody>
 
 </table>
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
