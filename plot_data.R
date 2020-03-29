@@ -53,12 +53,14 @@ gender_plot <- df_one_job %>%
     )) %>%
     group_by(Gender, DevType) %>%
     summarise(Count = n()) %>%
-    ggplot(aes(x = Gender, y = Count, fill = DevType)) + 
+    ggplot(aes(x = reorder(Gender, -Count), y = Count, fill = DevType)) + 
     geom_col(position = "dodge") + 
     theme_minimal() +
     labs(
+        x = "Gender identity",
         y = "Number of respondents"
     ) +
+    scale_y_continuous(breaks = seq(0, 1200, 200)) +
     scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
                         values = c("#94D0FF", "#AD8CFF"))
 
