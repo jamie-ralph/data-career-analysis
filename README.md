@@ -1,13 +1,14 @@
-Analysing data jobs in industry
+An exploratory analysis of data scientists and analysts working in
+industry (with a hint of predictive modelling)
 ================
 
 <br>
 
-In this project I’ll be taking a look at what data scientists and data
-analysts do differently in their day-to-day work and how this relates to
-their salary. The data comes from **StackOverflow’s 2019 Developer
-Survey** which a great resource for finding out about people who develop
-professionally or as a hobby. <br>
+In this project I’ll be exploring the characteristics of data scientists
+and data analysts and attempt to build a model for predicting salary.
+The data comes from **StackOverflow’s 2019 Developer Survey** which is a
+great resource for finding out about people who develop professionally
+or as a hobby. <br>
 
 This project was inspired by Julia Silge’s analysis of [gender and
 salary in the tech industry](https://juliasilge.com/blog/salary-gender/)
@@ -31,11 +32,15 @@ Respondents were labelled as data analysts if they identified as a “Data
 or business analyst” or a data scientist if identifying as “Data
 scientist or machine learning specialist”. 436 respondents identified
 with both labels. These responses were removed to focus the analysis on
-the differences between the two groups. This left 2326 responses. The
-salaries used here are the converted US Dollary salaries provided by
+the differences between the two groups. This left 2326 responses,
+consisting of 1058 data scientists and 1268 data analysts.
+
+The salaries used here are the converted US Dollary salaries provided by
 StackOverflow.
 
-#### What do data analysts and data scientists earn?
+### Exploring the data
+
+#### What do data scientists and data analysts earn?
 
 If we take a look at salaries overall, the range of salaries is similar
 between the groups with a large positive skew.
