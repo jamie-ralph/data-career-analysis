@@ -54,3 +54,23 @@ df_one_job %>%
               `Max salary` = max(ConvertedComp)) %>%
     knitr::kable()
 ```
+
+
+##### Gender identity
+
+The data shows that the majority of respondents indentified as men. 
+
+```{r}
+df_one_job %>%
+    mutate(Gender = case_when(
+        str_detect(Gender, "Non-binary") ~ 
+            "Non-binary, genderqueer, \n or gender non-conforming",
+        is.na(Gender) ~ "Not available",
+        TRUE ~ Gender
+    )) %>%
+    tabyl(DevType, Gender) %>%
+    adorn_percentages("row") %>%
+    adorn_pct_formatting() %>%
+    as.data.frame() %>%
+    kableExtra::kable()
+```

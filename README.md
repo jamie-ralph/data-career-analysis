@@ -54,3 +54,121 @@ is slightly higher than for data analysts.
 | :------------- | ------------: | ---------: | ---------: |
 | Data analyst   |       70580.5 |      30095 |    1750000 |
 | Data scientist |       83192.0 |      30051 |    1920000 |
+
+##### Gender identity
+
+The data shows that the majority of respondents indentified as men.
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+DevType
+
+</th>
+
+<th style="text-align:left;">
+
+Man
+
+</th>
+
+<th style="text-align:left;">
+
+Non-binary, genderqueer, or gender non-conforming
+
+</th>
+
+<th style="text-align:left;">
+
+Not available
+
+</th>
+
+<th style="text-align:left;">
+
+Woman
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:left;">
+
+89.4%
+
+</td>
+
+<td style="text-align:left;">
+
+1.6%
+
+</td>
+
+<td style="text-align:left;">
+
+1.7%
+
+</td>
+
+<td style="text-align:left;">
+
+7.3%
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Data scientist
+
+</td>
+
+<td style="text-align:left;">
+
+88.5%
+
+</td>
+
+<td style="text-align:left;">
+
+1.1%
+
+</td>
+
+<td style="text-align:left;">
+
+1.9%
+
+</td>
+
+<td style="text-align:left;">
+
+8.5%
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
