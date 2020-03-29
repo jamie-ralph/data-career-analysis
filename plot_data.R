@@ -1,7 +1,4 @@
-### Plots ###
-
-library(ggridges)
-library(cowplot)
+#### Plots ####
 
 ### Plotting overall salaries ###
 
