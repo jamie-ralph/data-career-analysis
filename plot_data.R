@@ -51,7 +51,7 @@ gender_plot_salary <- df_one_job %>%
             "Non-binary, genderqueer, \n or gender non-conforming",
         TRUE ~ Gender
     )) %>%
-    ggplot(aes(x = DevType, y = ConvertedComp, fill = DevType)) + 
+    ggplot(aes(x = DevType, y = ConvertedComp, colour = DevType)) + 
     geom_boxplot(outlier.colour = NA) + 
     facet_wrap(~factor(Gender, levels = c("Man", "Woman", "Non-binary, genderqueer, \n or gender non-conforming"))) +
     theme_minimal(base_size = 12) +
@@ -64,7 +64,7 @@ gender_plot_salary <- df_one_job %>%
     theme(
         legend.position = "none"
     ) +
-    scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
+    scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
                         values = c("#94D0FF", "#AD8CFF"))
 
 
