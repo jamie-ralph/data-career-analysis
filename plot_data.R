@@ -44,23 +44,27 @@ salary_grid_1 <- plot_grid(hist_plot(df_one_job), box_plot(df_one_job))
 
 ### Plotting demographics ###
 
-gender_plot <- df_one_job %>%
+gender_plot_salary <- df_one_job %>%
     filter(!is.na(Gender)) %>%
     mutate(Gender = case_when(
         str_detect(Gender, "Non-binary") ~ 
-            "Non-binary, genderqueer, or gender non-conforming",
-            TRUE ~ Gender
+            "Non-binary, genderqueer, \n or gender non-conforming",
+        TRUE ~ Gender
     )) %>%
-    group_by(Gender, DevType) %>%
-    summarise(Count = n()) %>%
-    ggplot(aes(x = reorder(Gender, -Count), y = Count, fill = DevType)) + 
-    geom_col(position = "dodge") + 
-    theme_minimal() +
+    ggplot(aes(x = DevType, y = ConvertedComp, fill = DevType)) + 
+    geom_boxplot(outlier.colour = NA) + 
+    facet_wrap(~factor(Gender, levels = c("Man", "Woman", "Non-binary, genderqueer, \n or gender non-conforming"))) +
+    theme_minimal(base_size = 12) +
+    geom_jitter(alpha = 0.3, width = 0.2) +
+    scale_y_log10(labels = scales::dollar_format(), position = "right") +
     labs(
-        x = "Gender identity",
-        y = "Number of respondents"
+        x = "",
+        y = "Salary (USD)"
     ) +
-    scale_y_continuous(breaks = seq(0, 1200, 200)) +
+    theme(
+        legend.position = "none"
+    ) +
     scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
                         values = c("#94D0FF", "#AD8CFF"))
+
 
