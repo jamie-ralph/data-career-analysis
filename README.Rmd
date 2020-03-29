@@ -41,7 +41,7 @@ If we take a look at salaries overall, the range of salaries is similar between 
 
 ```{r, fig.width=10}
 source("plot_data.r")
-salary_grid_1
+box_plot_salary
 ```
 
 The summary statistics show that the median salary for data scientists is slightly higher than for data analysts. 
