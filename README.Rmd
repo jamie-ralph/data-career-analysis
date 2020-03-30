@@ -26,7 +26,7 @@ To fit a more accurate model of salary the data were filtered to:
 
 * individual contributors working in industry only (i.e. removing upper management and academics)
 
-Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(df_both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df_one_job)` responses, consisting of `r nrow(filter(df_one_job, DevType == "Data scientist"))` data scientists and `r nrow(filter(df_one_job, DevType == "Data analyst"))` data analysts. 
+Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df)` responses, consisting of `r nrow(filter(df, DevType == "Data scientist"))` data scientists and `r nrow(filter(df, DevType == "Data analyst"))` data analysts. 
 
 
 ### Exploring the data
@@ -36,13 +36,13 @@ Respondents were labelled as data analysts if they identified as a "Data or busi
 If we take a look at salaries overall, the median salary for data scientists is slightly higher than for data analysts. Salaries in both groups are concentrated between \$30,000 and \$200,000 with a small number scattered between \$200,000 and the maximum \$2,000,000. 
 ```{r, fig.width=10}
 source("plot_data.r")
-box_plot_salary
+boxplot_all_salary
 
 
 ```
 
 ```{r}
-df_one_job %>%
+df %>%
     group_by(DevType) %>%
     summarise(`Median salary` = median(ConvertedComp),
               `Min salary`  = min(ConvertedComp),
@@ -56,13 +56,13 @@ df_one_job %>%
 
 ##### Gender identity
 
-The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that has been identified for the survey overall. This means between-gender differences may not generalise beyond the sample. `r nrow(filter(df_one_job, Trans == "Yes"))` respondents in this sample identified as trans. 
+The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that has been identified for the survey overall. This means between-gender differences may not generalise beyond the sample. `r nrow(filter(df, Trans == "Yes"))` respondents in this sample identified as trans. 
  
 
 ```{r}
-gender_plot_salary
+boxplot_gender_salary
 
-df_one_job %>%
+df %>%
     mutate(Gender = case_when(
         str_detect(Gender, "Non-binary") ~ 
             "Non-binary/genderqueer/gender non-conforming",
