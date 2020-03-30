@@ -80,7 +80,7 @@ df %>%
 
 #### Age
 
-Overall the median age of the sample was `r median(df$Age)`. The distributions of ages were 
+The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were 
 similar for data analysts and data scientists. There was no clear relationship between age
 and salary for either group. 
 
