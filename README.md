@@ -176,3 +176,11 @@ Data scientist
 </tbody>
 
 </table>
+
+#### Age
+
+Overall the median age of the sample was NA. The distributions of ages
+were similar for data analysts and data scientists. There was no clear
+relationship between age and salary for either group.
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->

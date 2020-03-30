@@ -77,3 +77,13 @@ df %>%
     kableExtra::kable()
 
 ```
+
+#### Age
+
+Overall the median age of the sample was `r median(df$Age)`. The distributions of ages were 
+similar for data analysts and data scientists. There was no clear relationship between age
+and salary for either group. 
+
+```{r, fig.width=12}
+age_plots
+```
