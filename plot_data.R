@@ -1,6 +1,6 @@
 #### Plots ####
 
-### Plotting overall salaries ###
+# Plotting overall salaries 
 
 box_plot_salary <- df_one_job %>%
     ggplot(aes(DevType, ConvertedComp,  colour = DevType)) +
@@ -20,7 +20,9 @@ box_plot_salary <- df_one_job %>%
     
 
 
-### Plotting demographics ###
+# Plotting demographics 
+
+## Gender identity 
 
 gender_plot_salary <- df_one_job %>%
     filter(!is.na(Gender)) %>%
@@ -44,5 +46,4 @@ gender_plot_salary <- df_one_job %>%
     ) +
     scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
                         values = c("#94D0FF", "#AD8CFF"))
-
 
