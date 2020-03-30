@@ -50,13 +50,16 @@ scattered between $200,000 and the maximum $2,000,000.
 
 <br>
 
-#### How is gender identity represented in the responses?
+#### Demographics
+
+##### Gender identity
 
 The data shows that the majority of respondents indentified as men. Data
 scientists had higher median salaries than data analysts across the
 gender groups. It’s possible that women are under-represented in this
-sample, an issue that was identified for the survey overall. This means
-between-gender differences may not generalise beyond the sample.
+sample, an issue that has been identified for the survey overall. This
+means between-gender differences may not generalise beyond the sample.
+19 respondents in this sample identified as trans.
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 

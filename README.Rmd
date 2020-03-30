@@ -26,7 +26,7 @@ To fit a more accurate model of salary the data were filtered to:
 
 * individual contributors working in industry only (i.e. removing upper management and academics)
 
-Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(df_both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df_one_job)` responses, consisting of `r nrow(df_one_job[df_one_job$DevType == "Data scientist",])` data scientists and `r nrow(df_one_job[df_one_job$DevType == "Data analyst",])` data analysts. 
+Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(df_both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df_one_job)` responses, consisting of `r nrow(filter(df_one_job, DevType == "Data scientist"))` data scientists and `r nrow(filter(df_one_job, DevType == "Data analyst"))` data analysts. 
 
 
 ### Exploring the data
@@ -52,9 +52,11 @@ df_one_job %>%
 
 <br>
 
-#### How is gender identity represented in the responses?
+#### Demographics 
 
-The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that was identified for the survey overall. This means between-gender differences may not generalise beyond the sample. 
+##### Gender identity
+
+The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that has been identified for the survey overall. This means between-gender differences may not generalise beyond the sample. `r nrow(filter(df_one_job, Trans == "Yes"))` respondents in this sample identified as trans. 
  
 
 ```{r}
