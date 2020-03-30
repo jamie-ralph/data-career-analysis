@@ -17,7 +17,7 @@ managers <- df %>%
 academics <- df %>%
     filter(str_detect(DevType, "Academic researcher|Scientist|Educator"))
 
-# Filter to just UK and Ireland data people
+# Filter to data scientists and data analysts only
 
 data_jobs <- df %>% 
     anti_join(managers) %>%
@@ -31,7 +31,8 @@ data_jobs <- df %>%
     )) %>%
     filter(DevType != "Other")
 
-# Filter the data_jobs dataframe to people who only selected one job type
+# Filter df to people who selected both job types, then anti join to get
+# respondents who selected one job type
 
 df_both_jobs <- data_jobs %>%
     group_by(Respondent) %>%
