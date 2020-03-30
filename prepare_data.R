@@ -4,22 +4,22 @@ library(janitor)
 
 # Read in the data
 
-df <- read_csv("survey_results_public.csv") %>%
+data_ft <- read_csv("survey_results_public.csv") %>%
     filter(Employment == "Employed full-time",
         ConvertedComp > 3e4,
         ConvertedComp < 2e6)
 
 # Identify managers and academics
 
-managers <- df %>%
+managers <- data_ft %>%
     filter(str_detect(DevType, "Engineering manager|Product manager|Senior executive/VP"))
 
-academics <- df %>%
+academics <- data_ft %>%
     filter(str_detect(DevType, "Academic researcher|Scientist|Educator"))
 
 # Filter to data scientists and data analysts only
 
-data_jobs <- df %>% 
+data_jobs <- data_ft %>% 
     anti_join(managers) %>%
     anti_join(academics) %>%
     mutate(DevType = str_split(DevType, pattern = ";")) %>%
@@ -34,14 +34,14 @@ data_jobs <- df %>%
 # Filter df to people who selected both job types, then anti join to get
 # respondents who selected one job type
 
-df_both_jobs <- data_jobs %>%
+both_jobs <- data_jobs %>%
     group_by(Respondent) %>%
     summarise(Count = n()) %>%
     filter(Count > 1) %>%
     select(-Count)
 
-df_one_job <- data_jobs %>%
-    anti_join(df_both_jobs)
+df <- data_jobs %>%
+    anti_join(both_jobs)
     
 
 
