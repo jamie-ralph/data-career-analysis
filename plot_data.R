@@ -1,5 +1,5 @@
 #### Plots ####
-
+library(cowplot)
 ## Set custom scale
 
 devtype_scale_colour <- function() {
@@ -7,6 +7,10 @@ devtype_scale_colour <- function() {
                         values = c("#94D0FF", "#AD8CFF"))
 }
 
+devtype_scale_fill <- function() {
+    scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
+                        values = c("#94D0FF", "#AD8CFF"))
+}
 # Plotting overall salaries 
 
 boxplot_all_salary <- df %>%
@@ -52,3 +56,30 @@ boxplot_gender_salary <- df %>%
     ) +
     devtype_scale_colour()
 
+## Age
+
+hist_age <- df %>%
+    ggplot(aes(x = Age, fill = DevType, colour = DevType)) +
+    geom_histogram(bins = 100) +
+    theme_minimal(base_size = 12) +
+    devtype_scale_fill() +
+    devtype_scale_colour() +
+    labs(
+        y = "Number of respondents"
+    ) +
+    theme(
+        legend.position = "none"
+    )
+    
+
+scatter_age <- df %>%
+    ggplot(aes(x = Age, y = ConvertedComp, colour = DevType)) +
+    theme_minimal(base_size = 12) +
+    geom_point() +
+    labs(
+        y = "Salary (USD)"
+    ) +
+    devtype_scale_colour() +
+    facet_wrap(~DevType)
+
+age_plots <- plot_grid(hist_age, scatter_age)
