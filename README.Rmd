@@ -1,5 +1,5 @@
 ---
-title: An exploratory analysis of data scientists and analysts working in industry (with a bit of predictive modelling)
+title: "Stack Overflow Developer Survey 2019: Exploring the characteristics of data scientists and data analysts"
 output:
     github_document:
         html_preview: true
@@ -14,10 +14,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 source("prepare_data.r")
 ```
 
-In this project I'll be exploring the characteristics of data scientists and data analysts and attempt to build a model for predicting salary. The data comes from **StackOverflow's 2019 Developer Survey** which is a great resource for finding out about people who develop professionally or as a hobby. 
-<br>
-
-This project was inspired by Julia Silge's analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) which I highly recommend! 
+In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). Towards the end I'll use the survey responses to predict salaries (converted to US Dollars or USD). This project was inspired by Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/). 
 
 #### Notes on data preparation
 
@@ -31,20 +28,18 @@ To fit a more accurate model of salary the data were filtered to:
 
 Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(df_both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df_one_job)` responses, consisting of `r nrow(df_one_job[df_one_job$DevType == "Data scientist",])` data scientists and `r nrow(df_one_job[df_one_job$DevType == "Data analyst",])` data analysts. 
 
-The salaries used here are the converted US Dollar salaries provided by StackOverflow. 
 
 ### Exploring the data
 
 #### What do data scientists and data analysts earn? 
 
-If we take a look at salaries overall, the range of salaries is similar between the groups with a large positive skew. 
-
+If we take a look at salaries overall, the median salary for data scientists is slightly higher than for data analysts. Salaries in both groups are concentrated between \$30,000 and \$200,000 with a small number scattered between \$200,000 and the maximum \$2,000,000. 
 ```{r, fig.width=10}
 source("plot_data.r")
 box_plot_salary
-```
 
-The summary statistics show that the median salary for data scientists is slightly higher than for data analysts. 
+
+```
 
 ```{r}
 df_one_job %>%
@@ -59,13 +54,12 @@ df_one_job %>%
 
 #### How is gender identity represented in the responses?
 
-<br>
-
-The data shows that the majority of respondents indentified as men. It's possible
-that women are under-represented in this sample, an issue that was identified for 
-the survey overall. 
+The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that was identified for the survey overall. This means between-gender differences may not generalise beyond the sample. 
+ 
 
 ```{r}
+gender_plot_salary
+
 df_one_job %>%
     mutate(Gender = case_when(
         str_detect(Gender, "Non-binary") ~ 
@@ -76,8 +70,8 @@ df_one_job %>%
     tabyl(DevType, Gender) %>%
     adorn_percentages("row") %>%
     adorn_pct_formatting() %>%
+    adorn_ns() %>%
     select(DevType, Man, Woman, `Non-binary/genderqueer/gender non-conforming`, `Not available`) %>%
     kableExtra::kable()
 
-gender_plot_salary
 ```

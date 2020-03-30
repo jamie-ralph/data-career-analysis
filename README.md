@@ -1,18 +1,16 @@
-An exploratory analysis of data scientists and analysts working in
-industry (with a bit of predictive modelling)
+Stack Overflow Developer Survey 2019: Exploring the characteristics of
+data scientists and data analysts
 ================
 
 <br>
 
-In this project I’ll be exploring the characteristics of data scientists
-and data analysts and attempt to build a model for predicting salary.
-The data comes from **StackOverflow’s 2019 Developer Survey** which is a
-great resource for finding out about people who develop professionally
-or as a hobby. <br>
-
-This project was inspired by Julia Silge’s analysis of [gender and
-salary in the tech industry](https://juliasilge.com/blog/salary-gender/)
-which I highly recommend\!
+In this project I’ll be exploring survey responses from data scientists
+and data analysts in [Stack Overflow’s 2019 Developer
+Survey](https://insights.stackoverflow.com/survey/2019#overview).
+Towards the end I’ll use the survey responses to predict salaries
+(converted to US Dollars or USD). This project was inspired by Julia
+Silge’s brilliant analysis of [gender and salary in the tech
+industry](https://juliasilge.com/blog/salary-gender/).
 
 #### Notes on data preparation
 
@@ -35,20 +33,15 @@ with both labels. These responses were removed to focus the analysis on
 the differences between the two groups. This left 2326 responses,
 consisting of 1058 data scientists and 1268 data analysts.
 
-The salaries used here are the converted US Dollar salaries provided by
-StackOverflow.
-
 ### Exploring the data
 
 #### What do data scientists and data analysts earn?
 
-If we take a look at salaries overall, the range of salaries is similar
-between the groups with a large positive skew.
-
+If we take a look at salaries overall, the median salary for data
+scientists is slightly higher than for data analysts. Salaries in both
+groups are concentrated between $30,000 and $200,000 with a small number
+scattered between $200,000 and the maximum $2,000,000.
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
-
-The summary statistics show that the median salary for data scientists
-is slightly higher than for data analysts.
 
 | DevType        | Median salary | Min salary | Max salary |
 | :------------- | ------------: | ---------: | ---------: |
@@ -59,11 +52,13 @@ is slightly higher than for data analysts.
 
 #### How is gender identity represented in the responses?
 
-<br>
+The data shows that the majority of respondents indentified as men. Data
+scientists had higher median salaries than data analysts across the
+gender groups. It’s possible that women are under-represented in this
+sample, an issue that was identified for the survey overall. This means
+between-gender differences may not generalise beyond the sample.
 
-The data shows that the majority of respondents indentified as men. It’s
-possible that women are under-represented in this sample, an issue that
-was identified for the survey overall.
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 <table>
 
@@ -117,25 +112,25 @@ Data analyst
 
 <td style="text-align:left;">
 
-89.4%
+89.4% (1134)
 
 </td>
 
 <td style="text-align:left;">
 
-7.3%
+7.3% (92)
 
 </td>
 
 <td style="text-align:left;">
 
-1.6%
+1.6% (20)
 
 </td>
 
 <td style="text-align:left;">
 
-1.7%
+1.7% (22)
 
 </td>
 
@@ -151,25 +146,25 @@ Data scientist
 
 <td style="text-align:left;">
 
-88.5%
+88.5% (936)
 
 </td>
 
 <td style="text-align:left;">
 
-8.5%
+8.5% (90)
 
 </td>
 
 <td style="text-align:left;">
 
-1.1%
+1.1% (12)
 
 </td>
 
 <td style="text-align:left;">
 
-1.9%
+1.9% (20)
 
 </td>
 
@@ -178,5 +173,3 @@ Data scientist
 </tbody>
 
 </table>
-
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
