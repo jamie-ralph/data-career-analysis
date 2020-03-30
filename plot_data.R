@@ -1,8 +1,15 @@
 #### Plots ####
 
+## Set custom scale
+
+devtype_scale_colour <- function() {
+    scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
+                        values = c("#94D0FF", "#AD8CFF"))
+}
+
 # Plotting overall salaries 
 
-box_plot_salary <- df_one_job %>%
+boxplot_all_salary <- df %>%
     ggplot(aes(DevType, ConvertedComp,  colour = DevType)) +
     geom_boxplot(outlier.colour = NA) +
     theme_minimal(base_size = 12) +
@@ -15,8 +22,7 @@ box_plot_salary <- df_one_job %>%
     theme(
         legend.position = "none"
     ) +
-    scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
-                        values = c("#94D0FF", "#AD8CFF"))
+    devtype_scale_colour()
     
 
 
@@ -24,7 +30,7 @@ box_plot_salary <- df_one_job %>%
 
 ## Gender identity 
 
-gender_plot_salary <- df_one_job %>%
+boxplot_gender_salary <- df %>%
     filter(!is.na(Gender)) %>%
     mutate(Gender = case_when(
         str_detect(Gender, "Non-binary") ~ 
@@ -44,6 +50,5 @@ gender_plot_salary <- df_one_job %>%
     theme(
         legend.position = "none"
     ) +
-    scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
-                        values = c("#94D0FF", "#AD8CFF"))
+    devtype_scale_colour()
 
