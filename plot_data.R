@@ -79,6 +79,7 @@ scatter_age <- df %>%
     labs(
         y = "Salary (USD)"
     ) +
+    scale_y_log10(labels = scales::dollar_format()) +
     devtype_scale_colour() +
     facet_wrap(~DevType)
 
