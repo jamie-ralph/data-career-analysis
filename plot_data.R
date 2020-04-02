@@ -84,3 +84,24 @@ scatter_age <- df %>%
     facet_wrap(~DevType)
 
 age_plots <- plot_grid(hist_age, scatter_age)
+
+## Sexuality
+
+levels = c("Straight / Heterosexual", "Bisexual", "Gay or Lesbian")
+
+sexuality_bar_plot <- df %>%
+    filter(!is.na(Sexuality)) %>%
+    mutate(
+        Sexuality = str_split(Sexuality, pattern = ";")
+    ) %>%
+    unnest(Sexuality) %>%
+    group_by(DevType, Sexuality) %>%
+    tally() %>%
+    ggplot(aes(x = factor(Sexuality, levels = rev(levels)), y = n, fill = DevType)) +
+    geom_col(position = "dodge") +
+    theme_minimal(base_size = 12) +
+    labs(
+        x = "Sexuality"
+    ) +
+    coord_flip() +
+    devtype_scale_fill()

@@ -78,7 +78,7 @@ df %>%
 
 ```
 
-#### Age
+##### Age
 
 The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were 
 similar for data analysts and data scientists. There was no clear relationship between age
@@ -86,4 +86,14 @@ and salary for either group.
 
 ```{r, fig.width=12}
 age_plots
+```
+
+##### Sexuality
+
+The majority of the sample identified solely as heterosexual. A small number of
+respondents identified with more than one sexuality. There were no differences in
+sexuality between data analysts and data scientists. 
+
+```{r, fig.width=12}
+sexuality_bar_plot
 ```

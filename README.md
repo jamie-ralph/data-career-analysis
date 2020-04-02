@@ -177,10 +177,19 @@ Data scientist
 
 </table>
 
-#### Age
+##### Age
 
 The median age of the sample was 31. The distributions of ages were
 similar for data analysts and data scientists. There was no clear
 relationship between age and salary for either group.
 
 ![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+##### Sexuality
+
+The majority of the sample identified solely as heterosexual. A small
+number of respondents identified with more than one sexuality. There
+were no differences in sexuality between data analysts and data
+scientists.
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
