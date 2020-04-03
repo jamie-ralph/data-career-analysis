@@ -75,6 +75,7 @@ hist_age <- df %>%
 scatter_age <- df %>%
     ggplot(aes(x = Age, y = ConvertedComp, colour = DevType)) +
     theme_minimal(base_size = 12) +
+    guides(colour = guide_legend(override.aes = list(size = 5))) +
     geom_point() +
     labs(
         y = "Salary (USD)"
