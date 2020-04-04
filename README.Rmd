@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
 source("prepare_data.r")
 ```
 
-In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). Towards the end I'll use the survey responses to predict salaries (converted to US Dollars or USD). This project was inspired by Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/). 
+In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to model industry salaries (converted to US Dollars or USD). This project was inspired by Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/). 
 
 #### Notes on data preparation
 
@@ -22,7 +22,7 @@ To fit a more accurate model of salary the data were filtered to:
 
 * full-time workers 
 
-* salaries between between \$30,000 and \$2,000,000 (salaries below this are unlikely to be full-time, salaries above are most likely threshold values; see the [survey methodology](https://insights.stackoverflow.com/survey/2019#methodology))
+* salaries between between \$30,000 and \$300,000
 
 * individual contributors working in industry only (i.e. removing upper management and academics)
 
@@ -33,7 +33,7 @@ Respondents were labelled as data analysts if they identified as a "Data or busi
 
 #### What do data scientists and data analysts earn? 
 
-If we take a look at salaries overall, the median salary for data scientists is slightly higher than for data analysts. Salaries in both groups are concentrated between \$30,000 and \$200,000 with a small number scattered between \$200,000 and the maximum \$2,000,000. 
+If we take a look at salaries overall, the median salary for data scientists is slightly higher than for data analysts.
 ```{r, fig.width=10}
 source("plot_data.r")
 boxplot_all_salary

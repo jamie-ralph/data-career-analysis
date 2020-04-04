@@ -18,35 +18,30 @@ To fit a more accurate model of salary the data were filtered to:
 
   - full-time workers
 
-  - salaries between between $30,000 and $2,000,000 (salaries below this
-    are unlikely to be full-time, salaries above are most likely
-    threshold values; see the [survey
-    methodology](https://insights.stackoverflow.com/survey/2019#methodology))
+  - salaries between between $30,000 and $300,000
 
   - individual contributors working in industry only (i.e. removing
     upper management and academics)
 
 Respondents were labelled as data analysts if they identified as a “Data
 or business analyst” or a data scientist if identifying as “Data
-scientist or machine learning specialist”. 436 respondents identified
+scientist or machine learning specialist”. 405 respondents identified
 with both labels. These responses were removed to focus the analysis on
-the differences between the two groups. This left 2326 responses,
-consisting of 1058 data scientists and 1268 data analysts.
+the differences between the two groups. This left 2150 responses,
+consisting of 973 data scientists and 1177 data analysts.
 
 ### Exploring the data
 
 #### What do data scientists and data analysts earn?
 
 If we take a look at salaries overall, the median salary for data
-scientists is slightly higher than for data analysts. Salaries in both
-groups are concentrated between $30,000 and $200,000 with a small number
-scattered between $200,000 and the maximum $2,000,000.
+scientists is slightly higher than for data analysts.
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 | DevType        | Median salary | Min salary | Max salary |
 | :------------- | ------------: | ---------: | ---------: |
-| Data analyst   |       70580.5 |      30095 |    1750000 |
-| Data scientist |       83192.0 |      30051 |    1920000 |
+| Data analyst   |         68000 |      30095 |     284664 |
+| Data scientist |         76416 |      30000 |     300000 |
 
 <br>
 
@@ -59,7 +54,7 @@ scientists had higher median salaries than data analysts across the
 gender groups. It’s possible that women are under-represented in this
 sample, an issue that has been identified for the survey overall. This
 means between-gender differences may not generalise beyond the sample.
-19 respondents in this sample identified as trans.
+16 respondents in this sample identified as trans.
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
@@ -115,25 +110,25 @@ Data analyst
 
 <td style="text-align:left;">
 
-89.4% (1134)
+89.4% (1052)
 
 </td>
 
 <td style="text-align:left;">
 
-7.3% (92)
+7.4% (87)
 
 </td>
 
 <td style="text-align:left;">
 
-1.6% (20)
+1.4% (17)
 
 </td>
 
 <td style="text-align:left;">
 
-1.7% (22)
+1.8% (21)
 
 </td>
 
@@ -149,25 +144,25 @@ Data scientist
 
 <td style="text-align:left;">
 
-88.5% (936)
+88.7% (863)
 
 </td>
 
 <td style="text-align:left;">
 
-8.5% (90)
+8.1% (79)
 
 </td>
 
 <td style="text-align:left;">
 
-1.1% (12)
+1.2% (12)
 
 </td>
 
 <td style="text-align:left;">
 
-1.9% (20)
+2.0% (19)
 
 </td>
 

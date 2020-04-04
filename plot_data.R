@@ -18,7 +18,7 @@ boxplot_all_salary <- df %>%
     geom_boxplot(outlier.colour = NA) +
     theme_minimal(base_size = 12) +
     geom_jitter(alpha = 0.3, width = 0.2) +
-    scale_y_log10(labels = scales::dollar_format()) +
+    scale_y_continuous(labels = scales::dollar_format()) +
     labs(
         x = "",
         y = "Salary (USD)"
@@ -43,10 +43,12 @@ boxplot_gender_salary <- df %>%
     )) %>%
     ggplot(aes(x = DevType, y = ConvertedComp, colour = DevType)) + 
     geom_boxplot(outlier.colour = NA) + 
-    facet_wrap(~factor(Gender, levels = c("Man", "Woman", "Non-binary, genderqueer, \n or gender non-conforming"))) +
+    facet_wrap(~factor(Gender, levels = c("Man", 
+                                          "Woman", 
+                                          "Non-binary, genderqueer, \n or gender non-conforming"))) +
     theme_minimal(base_size = 12) +
     geom_jitter(alpha = 0.3, width = 0.2) +
-    scale_y_log10(labels = scales::dollar_format()) +
+    scale_y_continuous(labels = scales::dollar_format()) +
     labs(
         x = "",
         y = "Salary (USD)"
@@ -80,7 +82,7 @@ scatter_age <- df %>%
     labs(
         y = "Salary (USD)"
     ) +
-    scale_y_log10(labels = scales::dollar_format()) +
+    scale_y_continuous(labels = scales::dollar_format()) +
     devtype_scale_colour() +
     facet_wrap(~DevType)
 
