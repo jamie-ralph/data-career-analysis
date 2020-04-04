@@ -197,6 +197,8 @@ data scientists who studied maths or statistics had the highest median
 earnings whereas data analysts who’d studied maths or statistics had the
 lowest.
 
+<br>
+
 <table>
 
 <thead>
@@ -572,3 +574,12 @@ Data analyst
 </tbody>
 
 </table>
+
+<br>
+
+Median salary was higher for data scientists at each aggregated
+qualification level. Overall there was little effect of education on
+data scientist earnings, whereas earnings were slightly higher for data
+analysts with at least a bachelor’s degree.
+
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->

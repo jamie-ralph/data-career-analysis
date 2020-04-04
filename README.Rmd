@@ -102,6 +102,8 @@ sexuality_bar_plot
 
 Breaking down salaries by undergrad major and developer type shows that data scientists who studied maths or statistics had the highest median earnings whereas data analysts who'd studied maths or statistics had the lowest. 
 
+<br>
+
 ```{r}
 df %>%
     filter(!is.na(UndergradMajor)) %>%
@@ -110,5 +112,42 @@ df %>%
     filter(`Sample size` >= 30) %>%
     arrange(-`Median salary`) %>%
     kableExtra::kable()
+
+```
+<br>
+
+Median salary was higher for data scientists at each aggregated qualification level. Overall there was little effect of education on data scientist earnings, whereas earnings were slightly higher for data analysts with at least a bachelor's degree. 
+
+
+```{r}
+df %>%
+    filter(!is.na(EdLevel)) %>%
+    mutate(
+    EdLevel = fct_collapse(EdLevel,
+      `Less than bachelor's` = c(
+        "I never completed any formal education",
+        "Primary/elementary school",
+        "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
+        "Some college/university study without earning a degree",
+        "Associate degree"
+      ),
+      `Bachelor's degree` = "Bachelor’s degree (BA, BS, B.Eng., etc.)",
+      `Graduate degree` = c(
+        "Other doctoral degree (Ph.D, Ed.D., etc.)",
+        "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
+        "Professional degree (JD, MD, etc.)"
+      )
+    )
+    ) %>%
+    ggplot(aes(x = EdLevel, y = ConvertedComp, fill = DevType)) +
+    geom_boxplot() +
+    scale_y_continuous(labels = scales::dollar_format()) +
+    theme_minimal(base_size = 12) +
+    scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
+                        values = c("#94D0FF", "#AD8CFF")) +
+    labs(
+        x = "Highest qualification",
+        y = "Salary (USD)"
+    )
 
 ```
