@@ -6,11 +6,12 @@ data scientists and data analysts
 
 In this project I’ll be exploring survey responses from data scientists
 and data analysts in [Stack Overflow’s 2019 Developer
-Survey](https://insights.stackoverflow.com/survey/2019#overview).
-Towards the end I’ll use the survey responses to predict salaries
-(converted to US Dollars or USD). This project was inspired by Julia
-Silge’s brilliant analysis of [gender and salary in the tech
-industry](https://juliasilge.com/blog/salary-gender/).
+Survey](https://insights.stackoverflow.com/survey/2019#overview). I’ll
+be using the survey responses to model industry salaries (converted to
+US Dollars or USD). Huge credit goes Julia Silge’s brilliant analysis of
+[gender and salary in the tech
+industry](https://juliasilge.com/blog/salary-gender/) from which I’ve
+re-used R code for cleaning and filtering the data.
 
 #### Notes on data preparation
 
@@ -188,3 +189,386 @@ were no differences in sexuality between data analysts and data
 scientists.
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+#### Education
+
+Breaking down salaries by undergrad major and developer type shows that
+data scientists who studied maths or statistics had the highest median
+earnings whereas data analysts who’d studied maths or statistics had the
+lowest.
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+UndergradMajor
+
+</th>
+
+<th style="text-align:left;">
+
+DevType
+
+</th>
+
+<th style="text-align:right;">
+
+Sample size
+
+</th>
+
+<th style="text-align:right;">
+
+Median salary
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+Mathematics or statistics
+
+</td>
+
+<td style="text-align:left;">
+
+Data scientist
+
+</td>
+
+<td style="text-align:right;">
+
+163
+
+</td>
+
+<td style="text-align:right;">
+
+90066
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+A natural science (ex. biology, chemistry, physics)
+
+</td>
+
+<td style="text-align:left;">
+
+Data scientist
+
+</td>
+
+<td style="text-align:right;">
+
+101
+
+</td>
+
+<td style="text-align:right;">
+
+83000
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Another engineering discipline (ex. civil, electrical, mechanical)
+
+</td>
+
+<td style="text-align:left;">
+
+Data scientist
+
+</td>
+
+<td style="text-align:right;">
+
+85
+
+</td>
+
+<td style="text-align:right;">
+
+75237
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+A natural science (ex. biology, chemistry, physics)
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+61
+
+</td>
+
+<td style="text-align:right;">
+
+73328
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Computer science, computer engineering, or software engineering
+
+</td>
+
+<td style="text-align:left;">
+
+Data scientist
+
+</td>
+
+<td style="text-align:right;">
+
+492
+
+</td>
+
+<td style="text-align:right;">
+
+72697
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Information systems, information technology, or system administration
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+127
+
+</td>
+
+<td style="text-align:right;">
+
+70548
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Another engineering discipline (ex. civil, electrical, mechanical)
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+83
+
+</td>
+
+<td style="text-align:right;">
+
+70000
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+A business discipline (ex. accounting, finance, marketing)
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+90
+
+</td>
+
+<td style="text-align:right;">
+
+68725
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Computer science, computer engineering, or software engineering
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+505
+
+</td>
+
+<td style="text-align:right;">
+
+68705
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+A social science (ex. anthropology, psychology, political science)
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+51
+
+</td>
+
+<td style="text-align:right;">
+
+68000
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+A humanities discipline (ex. literature, history, philosophy)
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+37
+
+</td>
+
+<td style="text-align:right;">
+
+64800
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+Mathematics or statistics
+
+</td>
+
+<td style="text-align:left;">
+
+Data analyst
+
+</td>
+
+<td style="text-align:right;">
+
+66
+
+</td>
+
+<td style="text-align:right;">
+
+61825
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>

@@ -26,11 +26,12 @@ data_jobs <- data_ft %>%
     mutate(DevType = str_split(DevType, pattern = ";")) %>%
     unnest(DevType) %>%
     mutate(DevType = case_when(
-        str_detect(str_to_lower(DevType), "data scientist") ~ "Data scientist",
-        str_detect(str_to_lower(DevType), "data or business") ~ "Data analyst",
-        TRUE ~ "Other"
-    )) %>%
+            str_detect(str_to_lower(DevType), "data scientist") ~ "Data scientist",
+            str_detect(str_to_lower(DevType), "data or business") ~ "Data analyst",
+            TRUE ~ "Other") ) %>%
     filter(DevType != "Other")
+    
+        
 
 # Filter df to people who selected both job types, then anti join to get
 # respondents who selected one job type
