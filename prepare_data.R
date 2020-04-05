@@ -1,13 +1,14 @@
 ### Data preparation script ### 
 library(tidyverse)
 library(janitor)
+library(patchwork)
 
 # Read in the data
 
 data_ft <- read_csv("survey_results_public.csv") %>%
     filter(Employment == "Employed full-time",
-        ConvertedComp >= 3e4,
-        ConvertedComp <= 3e5
+           ConvertedComp >= 3e4,
+           ConvertedComp <= 3e5
     )
 
 # Identify managers and academics
@@ -26,12 +27,12 @@ data_jobs <- data_ft %>%
     mutate(DevType = str_split(DevType, pattern = ";")) %>%
     unnest(DevType) %>%
     mutate(DevType = case_when(
-            str_detect(str_to_lower(DevType), "data scientist") ~ "Data scientist",
-            str_detect(str_to_lower(DevType), "data or business") ~ "Data analyst",
-            TRUE ~ "Other") ) %>%
+        str_detect(str_to_lower(DevType), "data scientist") ~ "Data scientist",
+        str_detect(str_to_lower(DevType), "data or business") ~ "Data analyst",
+        TRUE ~ "Other") ) %>%
     filter(DevType != "Other")
-    
-        
+
+
 
 # Filter df to people who selected both job types, then anti join to get
 # respondents who selected one job type
@@ -44,7 +45,3 @@ both_jobs <- data_jobs %>%
 
 df <- data_jobs %>%
     anti_join(both_jobs)
-    
-
-
-        

@@ -37,12 +37,12 @@ consisting of 973 data scientists and 1177 data analysts.
 
 If we take a look at salaries overall, the median salary for data
 scientists is slightly higher than for data analysts.
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 | DevType        | Median salary | Min salary | Max salary |
-| :------------- | ------------: | ---------: | ---------: |
-| Data analyst   |         68000 |      30095 |     284664 |
-| Data scientist |         76416 |      30000 |     300000 |
+| :------------- | :------------ | :--------- | :--------- |
+| Data analyst   | $68,000       | $30,095    | $284,664   |
+| Data scientist | $76,416       | $30,000    | $300,000   |
 
 <br>
 
@@ -57,7 +57,7 @@ sample, an issue that has been identified for the survey overall. This
 means between-gender differences may not generalise beyond the sample.
 16 respondents in this sample identified as trans.
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
 <table>
 
@@ -179,7 +179,7 @@ The median age of the sample was 31. The distributions of ages were
 similar for data analysts and data scientists. There was no clear
 relationship between age and salary for either group.
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 ##### Sexuality
 
@@ -188,16 +188,21 @@ number of respondents identified with more than one sexuality. There
 were no differences in sexuality between data analysts and data
 scientists.
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 #### Education
+
+Median salary was higher for data scientists at each aggregated
+qualification level. Overall there was little effect of education on
+data scientist earnings, whereas earnings were slightly higher for data
+analysts with at least a bachelor’s degree.
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 Breaking down salaries by undergrad major and developer type shows that
 data scientists who studied maths or statistics had the highest median
 earnings whereas data analysts who’d studied maths or statistics had the
 lowest.
-
-<br>
 
 <table>
 
@@ -223,7 +228,7 @@ Sample size
 
 </th>
 
-<th style="text-align:right;">
+<th style="text-align:left;">
 
 Median salary
 
@@ -255,9 +260,9 @@ Data scientist
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-90066
+$90,066
 
 </td>
 
@@ -283,9 +288,9 @@ Data scientist
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-83000
+$83,000
 
 </td>
 
@@ -311,9 +316,9 @@ Data scientist
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-75237
+$75,237
 
 </td>
 
@@ -339,9 +344,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-73328
+$73,328
 
 </td>
 
@@ -367,9 +372,9 @@ Data scientist
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-72697
+$72,697
 
 </td>
 
@@ -395,9 +400,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-70548
+$70,548
 
 </td>
 
@@ -423,9 +428,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-70000
+$70,000
 
 </td>
 
@@ -451,9 +456,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-68725
+$68,725
 
 </td>
 
@@ -479,9 +484,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-68705
+$68,705
 
 </td>
 
@@ -507,9 +512,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-68000
+$68,000
 
 </td>
 
@@ -535,9 +540,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-64800
+$64,800
 
 </td>
 
@@ -563,9 +568,9 @@ Data analyst
 
 </td>
 
-<td style="text-align:right;">
+<td style="text-align:left;">
 
-61825
+$61,825
 
 </td>
 
@@ -574,12 +579,3 @@ Data analyst
 </tbody>
 
 </table>
-
-<br>
-
-Median salary was higher for data scientists at each aggregated
-qualification level. Overall there was little effect of education on
-data scientist earnings, whereas earnings were slightly higher for data
-analysts with at least a bachelor’s degree.
-
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
