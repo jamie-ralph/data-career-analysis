@@ -20,6 +20,14 @@ devtype_scale_fill <- function() {
     scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
                         values = c("#94D0FF", "#AD8CFF"))
 }
+
+med_ds <- scales::dollar(
+  median(df[df$DevType == "Data scientist",]$ConvertedComp)
+)
+
+med_da <- scales::dollar(
+  median(df[df$DevType == "Data analyst",]$ConvertedComp)
+)
 ```
 
 In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to model industry salaries (converted to US Dollars or USD). Huge credit goes Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) from which I've re-used R code for cleaning and filtering the data. 
@@ -41,13 +49,13 @@ Respondents were labelled as data analysts if they identified as a "Data or busi
 
 #### What do data scientists and data analysts earn? 
 
-If we take a look at salaries overall, the median salary for data scientists is slightly higher than for data analysts.
+If we take a look at salaries overall, the median salary for data scientists is slightly higher (`r med_ds`) than for data analysts (`r med_da`). Salaries for both groups are positively skewed, so fitting a linear model to the data would require a log transform (shown below).
 ```{r fig.width=12}
-df %>%
+salary_boxplot <- df %>%
     ggplot(aes(DevType, ConvertedComp,  colour = DevType)) +
-    geom_boxplot(outlier.colour = NA) +
+    geom_boxplot(outlier.colour = NA, width = 0.5) +
     theme_minimal(base_size = 12) +
-    geom_jitter(alpha = 0.3, width = 0.2) +
+    geom_jitter(alpha = 0.3, width = 0.1) +
     scale_y_continuous(labels = scales::dollar_format()) +
     labs(
         x = "",
@@ -58,13 +66,43 @@ df %>%
     ) +
     devtype_scale_colour()
 
+salary_hist <- df %>%
+  ggplot(aes(x = ConvertedComp, y = DevType))  +
+  ggridges::geom_density_ridges(aes(fill = DevType)) +
+  theme_minimal() +
+  scale_x_continuous(
+    labels = scales::dollar_format()
+  ) +
+  labs(
+    x = "Salary (USD)",
+    y = ""
+  ) +
+  devtype_scale_fill() +
+  theme(
+    legend.position = "none"
+  ) +
+  ggtitle("Original salary")
 
-df %>%
-    group_by(DevType) %>%
-    summarise(`Median salary` = scales::dollar(median(ConvertedComp)),
-              `Min salary`  = scales::dollar(min(ConvertedComp)),
-              `Max salary` = scales::dollar(max(ConvertedComp))) %>%
-    knitr::kable()
+salary_hist_log <- df %>%
+  ggplot(aes(x = log10(ConvertedComp), y = DevType))  +
+  ggridges::geom_density_ridges(aes(fill = DevType)) +
+  theme_minimal() +
+  scale_x_continuous(
+    labels = scales::dollar_format()
+  ) +
+  labs(
+    x = "Log10 salary (USD)",
+    y = ""
+  ) +
+  devtype_scale_fill() +
+  theme(
+    legend.position = "none"
+  ) +
+  ggtitle("Salary with log10 transform")
+
+
+
+salary_boxplot / (salary_hist + salary_hist_log)
 ```
 
 <br>
@@ -153,40 +191,13 @@ scatter_age <- df %>%
 hist_age + scatter_age
 ```
 
-##### Sexuality
-
-The majority of the sample identified solely as heterosexual. A small number of
-respondents identified with more than one sexuality. There were no differences in
-sexuality between data analysts and data scientists. 
-
-```{r, fig.width=12}
-s_levels = c("Straight / Heterosexual", "Bisexual", "Gay or Lesbian")
-
-df %>%
-    filter(!is.na(Sexuality)) %>%
-    mutate(
-        Sexuality = str_split(Sexuality, pattern = ";")
-    ) %>%
-    unnest(Sexuality) %>%
-    group_by(DevType, Sexuality) %>%
-    tally() %>%
-    ggplot(aes(x = factor(Sexuality, levels = rev(s_levels)), y = n, fill = DevType)) +
-    geom_col(position = "dodge") +
-    theme_minimal(base_size = 12) +
-    labs(
-        x = "Sexuality"
-    ) +
-    coord_flip() +
-    devtype_scale_fill()
-```
-
 #### Education
 
-Median salary was higher for data scientists at each aggregated qualification level. Overall there was little effect of education on data scientist earnings, whereas earnings were slightly higher for data analysts with at least a bachelor's degree. 
+Median salary was higher for data scientists at each aggregated qualification level. Overall there was little effect of education on data scientist earnings, whereas earnings were slightly higher for data analysts with at least a bachelor's degree. Breaking down salaries by undergrad major and developer type shows that data scientists who studied maths or statistics had the highest median earnings whereas data analysts who'd studied maths or statistics had the lowest. 
 
 
 ```{r}
-df %>%
+ed_boxplot <- df %>%
     filter(!is.na(EdLevel)) %>%
     mutate(
     EdLevel = fct_collapse(EdLevel,
@@ -205,23 +216,18 @@ df %>%
       )
     )
     ) %>%
-    ggplot(aes(x = EdLevel, y = ConvertedComp, fill = DevType)) +
+    ggplot(aes(x = EdLevel, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(labels = scales::dollar_format()) +
     theme_minimal(base_size = 12) +
-    scale_fill_manual(breaks = c("Data analyst", "Data scientist"),
+    scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
                         values = c("#94D0FF", "#AD8CFF")) +
     labs(
         x = "Highest qualification",
         y = "Salary (USD)"
     )
 
-```
-
-Breaking down salaries by undergrad major and developer type shows that data scientists who studied maths or statistics had the highest median earnings whereas data analysts who'd studied maths or statistics had the lowest. 
-
-```{r}
-df %>%
+ed_table <- df %>%
     filter(!is.na(UndergradMajor)) %>%
     group_by(UndergradMajor, DevType) %>%
     summarise(`Sample size` = n(), 
@@ -233,4 +239,76 @@ df %>%
     ) %>%
     kableExtra::kable()
 
+ed_boxplot 
+
+ed_table
+
+
+
+```
+
+#### Employment
+
+Median salaries were highest for data scientists who weren't professional developers. There was an upward trend of salary ranges as organisation size increased. 
+
+<br>
+
+```{r}
+prof_boxplot <- df %>%
+    mutate(
+        MainBranch = case_when(
+            str_detect("I am a developer by profession", 
+                       MainBranch) ~ "Professional developer",
+            TRUE ~ "Not professional developer"
+        )
+    ) %>%
+    ggplot(aes(x = MainBranch, y = ConvertedComp, colour = DevType)) +
+    geom_boxplot() +
+    scale_y_continuous(
+        labels = scales::dollar_format()
+    ) +
+    theme_minimal() +
+  labs(
+    x = "",
+    y = "Salary (USD)"
+  ) +
+  theme(
+    legend.position = "none"
+  ) +
+    devtype_scale_colour() 
+
+org_boxplot <- df %>%
+    filter(!is.na(OrgSize)) %>%
+    mutate(
+     OrgSize = fct_collapse(OrgSize,
+        `Freelancer/sole proprietor etc.` = "Just me - I am a freelancer, sole proprietor, etc.",
+        `Between 2 and 99` = c("2-9 employees", "10 to 19 employees", "20 to 99 employees"),
+        `Between 100 and 999` = c("100 to 499 employees", "500 to 999 employees"),
+        `Between 1,000 and 4,999` = "1,000 to 4,999 employees",
+        `Between 5,000 and 9,999` = "5,000 to 9,999 employees",
+        `10,000 or more` = "10,000 or more employees"
+        )
+    ) %>%
+    mutate(
+        OrgSize = factor(OrgSize,
+                         levels = c("Freelancer/sole proprietor etc.",
+        "Between 2 and 99",
+        "Between 100 and 999",
+        "Between 1,000 and 4,999",
+        "Between 5,000 and 9,999",
+        "10,000 or more")
+        )
+    ) %>%
+    ggplot(aes(x = OrgSize, y = ConvertedComp, colour = DevType)) +
+    geom_boxplot() +
+    scale_y_continuous(
+        name = "Salary (USD)",
+        labels = scales::dollar_format()
+    ) +
+    theme_minimal() +
+    devtype_scale_colour() +
+    coord_flip()
+
+prof_boxplot / org_boxplot
+    
 ```

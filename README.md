@@ -36,13 +36,10 @@ consisting of 973 data scientists and 1177 data analysts.
 #### What do data scientists and data analysts earn?
 
 If we take a look at salaries overall, the median salary for data
-scientists is slightly higher than for data analysts.
+scientists is slightly higher ($76,416) than for data analysts
+($68,000). Salaries for both groups are positively skewed, so fitting a
+linear model to the data would require a log transform (shown below).
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
-
-| DevType        | Median salary | Min salary | Max salary |
-| :------------- | :------------ | :--------- | :--------- |
-| Data analyst   | $68,000       | $30,095    | $284,664   |
-| Data scientist | $76,416       | $30,000    | $300,000   |
 
 <br>
 
@@ -181,28 +178,17 @@ relationship between age and salary for either group.
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-##### Sexuality
-
-The majority of the sample identified solely as heterosexual. A small
-number of respondents identified with more than one sexuality. There
-were no differences in sexuality between data analysts and data
-scientists.
-
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
-
 #### Education
 
 Median salary was higher for data scientists at each aggregated
 qualification level. Overall there was little effect of education on
 data scientist earnings, whereas earnings were slightly higher for data
-analysts with at least a bachelor’s degree.
+analysts with at least a bachelor’s degree. Breaking down salaries by
+undergrad major and developer type shows that data scientists who
+studied maths or statistics had the highest median earnings whereas data
+analysts who’d studied maths or statistics had the lowest.
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
-
-Breaking down salaries by undergrad major and developer type shows that
-data scientists who studied maths or statistics had the highest median
-earnings whereas data analysts who’d studied maths or statistics had the
-lowest.
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 <table>
 
@@ -579,3 +565,13 @@ $61,825
 </tbody>
 
 </table>
+
+#### Employment
+
+Median salaries were highest for data scientists who weren’t
+professional developers. There was an upward trend of salary ranges as
+organisation size increased.
+
+<br>
+
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
