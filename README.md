@@ -10,10 +10,10 @@ Survey](https://insights.stackoverflow.com/survey/2019#overview). I’ll
 be using the survey responses to model industry salaries (converted to
 US Dollars or USD). Huge credit goes Julia Silge’s brilliant analysis of
 [gender and salary in the tech
-industry](https://juliasilge.com/blog/salary-gender/) from which I’ve
-re-used R code for cleaning and filtering the data.
+industry](https://juliasilge.com/blog/salary-gender/) for both inspiring
+the project and for providing useful code for wrangling the survey data.
 
-#### Notes on data preparation
+#### Notes on data prep
 
 To fit a more accurate model of salary the data were filtered to:
 
@@ -33,12 +33,16 @@ consisting of 973 data scientists and 1177 data analysts.
 
 ### Exploring the data
 
+Before building a model, I’ll build some exploratory plots of salary and
+other variables in the survey. This will help to select relevant
+variables for the model.
+
 #### What do data scientists and data analysts earn?
 
 If we take a look at salaries overall, the median salary for data
 scientists is slightly higher ($76,416) than for data analysts
 ($68,000). Salaries for both groups are positively skewed, so fitting a
-linear model to the data would require a log transform (shown below).
+linear model to the data will require a log10 transform.
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 <br>
@@ -173,8 +177,8 @@ Data scientist
 ##### Age
 
 The median age of the sample was 31. The distributions of ages were
-similar for data analysts and data scientists. There was no clear
-relationship between age and salary for either group.
+positively skewed. There was no clear relationship between age and
+salary for either group.
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
@@ -569,9 +573,32 @@ $61,825
 #### Employment
 
 Median salaries were highest for data scientists who weren’t
-professional developers. There was an upward trend of salary ranges as
-organisation size increased.
-
-<br>
+professional developers. Smaller organisation sizes were combined to
+reduce the number of size bands. There was an upward trend of salary
+ranges as organisation size increased. <br>
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+Most respondents in the sample worked 40 hours a week. The scatterplots
+below suggest that higher working hours per week don’t result in higher
+salaries\!
+
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+#### Coding & technical skills
+
+##### Years coding
+
+If we take the median salary for each year of professional coding
+experience, we see a positive relationship for data scientists and data
+analysts regardless of whether they code
+professionally.
+
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->![](README_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
+
+##### Open source
+
+Finally, the plot below shows that open source contributions don’t seem
+to affect salary\!
+
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->

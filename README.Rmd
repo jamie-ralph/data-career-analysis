@@ -28,11 +28,18 @@ med_ds <- scales::dollar(
 med_da <- scales::dollar(
   median(df[df$DevType == "Data analyst",]$ConvertedComp)
 )
+
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
 ```
 
-In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to model industry salaries (converted to US Dollars or USD). Huge credit goes Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) from which I've re-used R code for cleaning and filtering the data. 
+In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to model industry salaries (converted to US Dollars or USD). Huge credit goes Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) for both inspiring the project and for providing useful code for wrangling the survey data. 
 
-#### Notes on data preparation
+
+
+#### Notes on data prep
 
 To fit a more accurate model of salary the data were filtered to:
 
@@ -47,9 +54,12 @@ Respondents were labelled as data analysts if they identified as a "Data or busi
 
 ### Exploring the data
 
+Before building a model, I'll build some exploratory plots of salary and other
+variables in the survey. This will help to select relevant variables for the model. 
+
 #### What do data scientists and data analysts earn? 
 
-If we take a look at salaries overall, the median salary for data scientists is slightly higher (`r med_ds`) than for data analysts (`r med_da`). Salaries for both groups are positively skewed, so fitting a linear model to the data would require a log transform (shown below).
+If we take a look at salaries overall, the median salary for data scientists is slightly higher (`r med_ds`) than for data analysts (`r med_da`). Salaries for both groups are positively skewed, so fitting a linear model to the data will require a log10 transform. 
 ```{r fig.width=12}
 salary_boxplot <- df %>%
     ggplot(aes(DevType, ConvertedComp,  colour = DevType)) +
@@ -157,9 +167,7 @@ df %>%
 
 ##### Age
 
-The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were 
-similar for data analysts and data scientists. There was no clear relationship between age
-and salary for either group. 
+The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were positively skewed. There was no clear relationship between age and salary for either group. 
 
 ```{r, fig.width=12}
 hist_age <- df %>%
@@ -177,12 +185,12 @@ hist_age <- df %>%
     
 
 scatter_age <- df %>%
-    ggplot(aes(x = Age, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = Age, y = log10(ConvertedComp), colour = DevType)) +
     theme_minimal(base_size = 12) +
     guides(colour = guide_legend(override.aes = list(size = 5))) +
     geom_point() +
     labs(
-        y = "Salary (USD)"
+        y = "Log10 Salary (USD)"
     ) +
     scale_y_continuous(labels = scales::dollar_format()) +
     devtype_scale_colour() +
@@ -216,7 +224,7 @@ ed_boxplot <- df %>%
       )
     )
     ) %>%
-    ggplot(aes(x = EdLevel, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = EdLevel, y = log10(ConvertedComp), colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(labels = scales::dollar_format()) +
     theme_minimal(base_size = 12) +
@@ -224,7 +232,7 @@ ed_boxplot <- df %>%
                         values = c("#94D0FF", "#AD8CFF")) +
     labs(
         x = "Highest qualification",
-        y = "Salary (USD)"
+        y = "Log 10 Salary (USD)"
     )
 
 ed_table <- df %>%
@@ -249,8 +257,7 @@ ed_table
 
 #### Employment
 
-Median salaries were highest for data scientists who weren't professional developers. There was an upward trend of salary ranges as organisation size increased. 
-
+Median salaries were highest for data scientists who weren't professional developers. Smaller organisation sizes were combined to reduce the number of size bands. There was an upward trend of salary ranges as organisation size increased. 
 <br>
 
 ```{r}
@@ -262,7 +269,7 @@ prof_boxplot <- df %>%
             TRUE ~ "Not professional developer"
         )
     ) %>%
-    ggplot(aes(x = MainBranch, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = MainBranch, y = log10(ConvertedComp), colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
         labels = scales::dollar_format()
@@ -270,7 +277,7 @@ prof_boxplot <- df %>%
     theme_minimal() +
   labs(
     x = "",
-    y = "Salary (USD)"
+    y = "Log 10 Salary (USD)"
   ) +
   theme(
     legend.position = "none"
@@ -299,10 +306,10 @@ org_boxplot <- df %>%
         "10,000 or more")
         )
     ) %>%
-    ggplot(aes(x = OrgSize, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = OrgSize, y = log10(ConvertedComp), colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
-        name = "Salary (USD)",
+        name = "Log10 Salary (USD)",
         labels = scales::dollar_format()
     ) +
     theme_minimal() +
@@ -311,4 +318,114 @@ org_boxplot <- df %>%
 
 prof_boxplot / org_boxplot
     
+```
+
+Most respondents in the sample worked `r Mode(df$WorkWeekHrs)` hours a week. The scatterplots below suggest that higher working hours per week don't result in higher salaries!
+
+``` {r fig.width = 12}
+df %>%
+  filter(!is.na(WorkWeekHrs),
+         WorkWeekHrs < 100) %>%
+  ggplot(aes(x = WorkWeekHrs, y = log10(ConvertedComp), colour = DevType)) +
+  geom_point() +
+  scale_y_continuous(
+    labels = scales::dollar_format()
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    x = "Hours worked per week",
+    y = "Log10 median salary"
+  ) +
+  devtype_scale_colour() +
+  facet_wrap(~DevType) 
+  
+```
+
+#### Coding & technical skills
+
+##### Years coding
+
+If we take the median salary for each year of professional coding experience, we see a positive relationship for data scientists and data analysts regardless of whether they code professionally. 
+
+
+```{r fig.width=12}
+years_code_prof_dev <- df %>%
+  filter(YearsCodePro != "Less than 1 year",
+         grepl("by profession", MainBranch)) %>%
+  mutate(
+    YearsCodePro = as.numeric(YearsCodePro)
+  ) %>%
+  group_by(DevType, YearsCodePro) %>%
+  summarise(med_salary = median(ConvertedComp)) %>%
+  ggplot(aes(x = YearsCodePro, y = med_salary)) +
+  geom_point(size = 2.5, aes(colour = DevType)) +
+  scale_y_continuous(
+    labels = scales::dollar_format()
+  ) +
+  labs(
+    x = "Years coding professionally",
+    y = "Median salary (USD)"
+  ) +
+  theme_minimal(base_size = 12) +
+  devtype_scale_colour() +
+  facet_wrap(~DevType) +
+  ggtitle("Professional developer")
+
+
+
+years_code_not_prof_dev <- df %>%
+  filter(YearsCodePro != "Less than 1 year",
+         !grepl("by profession", MainBranch)) %>%
+  mutate(
+    YearsCodePro = as.numeric(YearsCodePro)
+  ) %>%
+  group_by(DevType, YearsCodePro) %>%
+  summarise(med_salary = median(ConvertedComp)) %>%
+  ggplot(aes(x = YearsCodePro, y = med_salary)) +
+  geom_point(size = 2.5, aes(colour = DevType)) +
+  scale_y_continuous(
+    labels = scales::dollar_format()
+  ) +
+  labs(
+    x = "Years coding professionally",
+    y = "Median salary (USD)"
+  ) +
+  theme_minimal(base_size = 12) + 
+  devtype_scale_colour() +
+  facet_wrap(~DevType) +
+  ggtitle("Not professional developer") 
+
+years_code_prof_dev 
+
+years_code_not_prof_dev
+
+```
+
+##### Open source 
+
+Finally, the plot below shows that open source contributions don't seem to affect salary!
+
+```{r}
+df %>%
+    mutate(OpenSourcer = fct_collapse(OpenSourcer,
+      Never = "Never",
+      Sometimes = "Less than once per year",
+      Often = c(
+        "Less than once a month but more than once per year",
+        "Once a month or more often"
+      )
+    )
+    ) %>%
+        ggplot(aes(x = OpenSourcer, y = log10(ConvertedComp), colour = DevType)) + 
+        geom_boxplot() +
+        labs(
+            y = "Log10 Salary (USD)",
+            x = ""
+        ) +
+    theme_minimal() +
+    facet_wrap(~DevType) +
+    devtype_scale_colour()
 ```
