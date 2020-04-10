@@ -46,3 +46,50 @@ both_jobs <- data_jobs %>%
 
 df <- data_jobs %>%
     anti_join(both_jobs)
+
+
+# Some additional data wrangling to make working with categorical data easier
+
+df <- df %>%
+    mutate(Gender = case_when(
+        str_detect(Gender, "Non-binary") ~ 
+            "Non-binary, genderqueer, or gender non-conforming",
+        is.na(Gender) ~ "Not available",
+        TRUE ~ Gender),
+        EdLevel = fct_collapse(EdLevel,
+                               `Less than bachelor's` = c(
+                                   "I never completed any formal education",
+                                   "Primary/elementary school",
+                                   "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
+                                   "Some college/university study without earning a degree",
+                                   "Associate degree"
+                               ),
+                               `Bachelor's degree` = "Bachelor’s degree (BA, BS, B.Eng., etc.)",
+                               `Graduate degree` = c(
+                                   "Other doctoral degree (Ph.D, Ed.D., etc.)",
+                                   "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
+                                   "Professional degree (JD, MD, etc.)"
+                               )
+        ),
+        MainBranch = case_when(
+            str_detect("I am a developer by profession", 
+                       MainBranch) ~ "Professional developer",
+            TRUE ~ "Not professional developer"
+        ),
+        OrgSize = fct_collapse(OrgSize,
+                               `Between 2 and 99` = c("2-9 employees", "10 to 19 employees", "20 to 99 employees"),
+                               `Between 100 and 999` = c("100 to 499 employees", "500 to 999 employees"),
+                               `Between 1,000 and 4,999` = "1,000 to 4,999 employees",
+                               `5,000 or more` = c("5,000 to 9,999 employees", "10,000 or more employees")
+        ),
+        OpenSourcer = fct_collapse(OpenSourcer,
+                                   Never = "Never",
+                                   Sometimes = "Less than once per year",
+                                   Often = c(
+                                       "Less than once a month but more than once per year",
+                                       "Once a month or more often"
+                                   )
+            )
+    )
+        
+        
