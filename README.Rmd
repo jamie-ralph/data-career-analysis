@@ -35,31 +35,35 @@ Mode <- function(x) {
 }
 ```
 
-In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to model industry salaries (converted to US Dollars or USD). Huge credit goes Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/) for both inspiring the project and for providing useful code for wrangling the survey data. 
+In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to build statistical models of industry salaries. This project reuses code from Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/). 
 
 
 
-#### Notes on data prep
+#### Preparing the data
 
 To fit a more accurate model of salary the data were filtered to:
 
 * full-time workers 
 
+* residing in the United States
+
 * salaries between between \$30,000 and \$300,000
 
 * individual contributors working in industry only (i.e. removing upper management and academics)
 
+This made the data more consistent for visualising and modelling. [This analysis by Charles Modingwa](https://medium.com/@charlesmodingwa/2019-stack-overflow-survey-analysis-c8dac1617d40) showed that data scientist salaries differed across countries. Filtering only to the United States removes any unwanted effects of country and still leaves a good sample size. 
+
 Respondents were labelled as data analysts if they identified as a "Data or business analyst" or a data scientist if identifying as "Data scientist or machine learning specialist". `r nrow(both_jobs)` respondents identified with both labels. These responses were removed to focus the analysis on the differences between the two groups. This left `r nrow(df)` responses, consisting of `r nrow(filter(df, DevType == "Data scientist"))` data scientists and `r nrow(filter(df, DevType == "Data analyst"))` data analysts. 
 
 
-### Exploring the data
+### Part 1 - Exploring the data
 
 Before building a model, I'll build some exploratory plots of salary and other
-variables in the survey. This will help to select relevant variables for the model. 
+variables in the survey. I chose variables based on analyses that have already looked at modelling salaries in this dataset, combined with some additional variables I was interested in. 
 
 #### What do data scientists and data analysts earn? 
 
-If we take a look at salaries overall, the median salary for data scientists is slightly higher (`r med_ds`) than for data analysts (`r med_da`). Salaries for both groups are positively skewed, so fitting a linear model to the data will require a log10 transform. 
+If we take a look at salaries overall, the median salary is higher for data scientists (`r med_ds`) than for data analysts (`r med_da`). Salaries for both groups are positively skewed due to small number of respondents earning about $150,000 or more. For modelling purposes the salaries will be log10 transformed to make them more normally distributed. 
 ```{r fig.width=12}
 salary_boxplot <- df %>%
     ggplot(aes(DevType, ConvertedComp,  colour = DevType)) +
@@ -117,11 +121,9 @@ salary_boxplot / (salary_hist + salary_hist_log)
 
 <br>
 
-#### Demographics 
+#### Does salary differ by gender identity?
 
-##### Gender identity
-
-The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that has been identified for the survey overall. This means between-gender differences may not generalise beyond the sample. `r nrow(filter(df, Trans == "Yes"))` respondents in this sample identified as trans. 
+The data shows that the majority of respondents indentified as men. Data scientists had higher median salaries than data analysts across the gender groups. It's possible that women are under-represented in this sample, an issue that has been identified for the survey across all developer roles. This means that, despite the boxplot indicating only a small gender difference between men and women, this result may not reflect the real world. `r nrow(filter(df, Trans == "Yes"))` respondents in this sample identified as trans. 
  
 
 ```{r fig.width=12}
@@ -165,14 +167,15 @@ df %>%
 
 ```
 
-##### Age
+#### Do salaries increase with age?
 
-The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were positively skewed. There was no clear relationship between age and salary for either group. 
+The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were positively skewed. If we plot a basic linear regression line we can see that salary increases with age. This can be expected if people who are older have more experience, something I'll look at shortly. 
 
 ```{r, fig.width=12}
 hist_age <- df %>%
     ggplot(aes(x = Age, fill = DevType, colour = DevType)) +
     geom_histogram(bins = 100) +
+    
     theme_minimal(base_size = 12) +
     devtype_scale_fill() +
     devtype_scale_colour() +
@@ -185,23 +188,25 @@ hist_age <- df %>%
     
 
 scatter_age <- df %>%
+    filter(Age >= 18) %>%
     ggplot(aes(x = Age, y = log10(ConvertedComp), colour = DevType)) +
     theme_minimal(base_size = 12) +
     guides(colour = guide_legend(override.aes = list(size = 5))) +
     geom_point() +
+    geom_smooth(method = "lm", se = FALSE, size = 1.5) +
     labs(
         y = "Log10 Salary (USD)"
     ) +
     scale_y_continuous(labels = scales::dollar_format()) +
-    devtype_scale_colour() +
-    facet_wrap(~DevType)
+    devtype_scale_colour() 
+   # facet_wrap(~DevType)
 
 hist_age + scatter_age
 ```
 
-#### Education
+#### Does education affect future salaries?
 
-Median salary was higher for data scientists at each aggregated qualification level. Overall there was little effect of education on data scientist earnings, whereas earnings were slightly higher for data analysts with at least a bachelor's degree. Breaking down salaries by undergrad major and developer type shows that data scientists who studied maths or statistics had the highest median earnings whereas data analysts who'd studied maths or statistics had the lowest. 
+Median salary was higher for data scientists at each aggregated qualification level. Overall there was a stronger positive effect of education on median earnings in the data scientist group compared to the data analyst group. Breaking down salaries by undergrad major and developer type shows that data scientists who studied maths or statistics had the highest median salary while data analysts with a social sciences background had the lowest median salary. 
 
 
 ```{r}
@@ -224,7 +229,7 @@ ed_boxplot <- df %>%
       )
     )
     ) %>%
-    ggplot(aes(x = EdLevel, y = log10(ConvertedComp), colour = DevType)) +
+    ggplot(aes(x = EdLevel, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(labels = scales::dollar_format()) +
     theme_minimal(base_size = 12) +
@@ -232,7 +237,7 @@ ed_boxplot <- df %>%
                         values = c("#94D0FF", "#AD8CFF")) +
     labs(
         x = "Highest qualification",
-        y = "Log 10 Salary (USD)"
+        y = "Salary (USD)"
     )
 
 ed_table <- df %>%
@@ -255,9 +260,9 @@ ed_table
 
 ```
 
-#### Employment
+#### Do employment variables affect salary?
 
-Median salaries were highest for data scientists who weren't professional developers. Smaller organisation sizes were combined to reduce the number of size bands. There was an upward trend of salary ranges as organisation size increased. 
+Median salaries were similar between respondents who develope professionally and those who don't develop professionally. There was an upward trend of salary ranges as organisation size increased. 
 <br>
 
 ```{r}
@@ -269,7 +274,7 @@ prof_boxplot <- df %>%
             TRUE ~ "Not professional developer"
         )
     ) %>%
-    ggplot(aes(x = MainBranch, y = log10(ConvertedComp), colour = DevType)) +
+    ggplot(aes(x = MainBranch, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
         labels = scales::dollar_format()
@@ -277,7 +282,7 @@ prof_boxplot <- df %>%
     theme_minimal() +
   labs(
     x = "",
-    y = "Log 10 Salary (USD)"
+    y = "Salary (USD)"
   ) +
   theme(
     legend.position = "none"
@@ -288,29 +293,29 @@ org_boxplot <- df %>%
     filter(!is.na(OrgSize)) %>%
     mutate(
      OrgSize = fct_collapse(OrgSize,
-        `Freelancer/sole proprietor etc.` = "Just me - I am a freelancer, sole proprietor, etc.",
         `Between 2 and 99` = c("2-9 employees", "10 to 19 employees", "20 to 99 employees"),
         `Between 100 and 999` = c("100 to 499 employees", "500 to 999 employees"),
         `Between 1,000 and 4,999` = "1,000 to 4,999 employees",
-        `Between 5,000 and 9,999` = "5,000 to 9,999 employees",
-        `10,000 or more` = "10,000 or more employees"
+        `5,000 or more` = c("5,000 to 9,999 employees", "10,000 or more employees")
         )
     ) %>%
     mutate(
         OrgSize = factor(OrgSize,
-                         levels = c("Freelancer/sole proprietor etc.",
+                         levels = c(
         "Between 2 and 99",
         "Between 100 and 999",
         "Between 1,000 and 4,999",
-        "Between 5,000 and 9,999",
-        "10,000 or more")
+        "5,000 or more")
         )
     ) %>%
-    ggplot(aes(x = OrgSize, y = log10(ConvertedComp), colour = DevType)) +
+    ggplot(aes(x = OrgSize, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
-        name = "Log10 Salary (USD)",
         labels = scales::dollar_format()
+    ) +
+    labs(
+      x = "Organisation size (employees)",
+      y = "Salary (USD)"
     ) +
     theme_minimal() +
     devtype_scale_colour() +
@@ -320,7 +325,7 @@ prof_boxplot / org_boxplot
     
 ```
 
-Most respondents in the sample worked `r Mode(df$WorkWeekHrs)` hours a week. The scatterplots below suggest that higher working hours per week don't result in higher salaries!
+Most respondents in the sample worked `r Mode(df$WorkWeekHrs)` hours a week. The scatterplots here suggest that higher working hours per week may result in higher log10 salary, but fitting a linear relationship would be confounded by the large number of respondents on the 40 hours line. 
 
 ``` {r fig.width = 12}
 df %>%
@@ -337,24 +342,21 @@ df %>%
   ) +
   labs(
     x = "Hours worked per week",
-    y = "Log10 median salary"
+    y = "Log10 Salary (USD)"
   ) +
   devtype_scale_colour() +
   facet_wrap(~DevType) 
   
 ```
 
-#### Coding & technical skills
+#### Does coding experience affect salary?
 
-##### Years coding
-
-If we take the median salary for each year of professional coding experience, we see a positive relationship for data scientists and data analysts regardless of whether they code professionally. 
+If we take the median salary for each year of professional coding experience, we see a positive relationship in the data analyst group. The data scientist group is more scattered as years of professional coding experience goes above 25. 
 
 
 ```{r fig.width=12}
-years_code_prof_dev <- df %>%
-  filter(YearsCodePro != "Less than 1 year",
-         grepl("by profession", MainBranch)) %>%
+df %>%
+  filter(YearsCodePro != "Less than 1 year") %>%
   mutate(
     YearsCodePro = as.numeric(YearsCodePro)
   ) %>%
@@ -371,42 +373,58 @@ years_code_prof_dev <- df %>%
   ) +
   theme_minimal(base_size = 12) +
   devtype_scale_colour() +
-  facet_wrap(~DevType) +
-  ggtitle("Professional developer")
+  facet_wrap(~DevType) 
 
 
 
-years_code_not_prof_dev <- df %>%
-  filter(YearsCodePro != "Less than 1 year",
-         !grepl("by profession", MainBranch)) %>%
-  mutate(
-    YearsCodePro = as.numeric(YearsCodePro)
-  ) %>%
-  group_by(DevType, YearsCodePro) %>%
-  summarise(med_salary = median(ConvertedComp)) %>%
-  ggplot(aes(x = YearsCodePro, y = med_salary)) +
-  geom_point(size = 2.5, aes(colour = DevType)) +
-  scale_y_continuous(
-    labels = scales::dollar_format()
-  ) +
-  labs(
-    x = "Years coding professionally",
-    y = "Median salary (USD)"
-  ) +
-  theme_minimal(base_size = 12) + 
-  devtype_scale_colour() +
-  facet_wrap(~DevType) +
-  ggtitle("Not professional developer") 
 
-years_code_prof_dev 
-
-years_code_not_prof_dev
 
 ```
 
-##### Open source 
+The number of programming languages used had a small positive effect on median earnings in the data analyst group, however the effect was somewhat negative in the data scientist group.
 
-Finally, the plot below shows that open source contributions don't seem to affect salary!
+```{r fig.width=12}
+langs_used <- df %>%
+    mutate(
+        LanguageWorkedWith = str_split(LanguageWorkedWith, pattern = ";")
+    ) %>%
+    unnest(LanguageWorkedWith) %>%
+    group_by(Respondent) %>%
+    summarise(languages_used = n()) %>%
+    mutate(
+        languages_used = case_when(
+            languages_used > 10 ~ 10,
+            TRUE ~ as.numeric(languages_used)
+        )
+    )
+
+df %>%
+    inner_join(langs_used, by = "Respondent") %>%
+    group_by(DevType, languages_used) %>%
+    summarise(med_salary = median(ConvertedComp)) %>%
+    ggplot(aes(x = languages_used, y = med_salary)) +
+    geom_line(alpha = 0.5, size = 2, aes(colour = DevType)) +
+    theme_minimal(base_size = 12) +
+    labs(
+        x = "Number of programming languages used \n (capped at 10)",
+        y = "Median salary (USD)"
+    ) +
+    scale_y_continuous(
+        labels = scales::dollar_format(),
+        limits = c(0, 150000)
+    ) +
+    scale_x_continuous(
+        breaks = 1:10,
+        minor_breaks = NULL
+    ) +
+    devtype_scale_colour() 
+```
+
+
+
+#### Do open source contributors earn more?
+
+Finally, the plot below shows that open source contributions have a small positive effect on median salaries in the data scientist group but less of an effect in the data analyst group. 
 
 ```{r}
 df %>%
