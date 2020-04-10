@@ -128,17 +128,12 @@ The data shows that the majority of respondents indentified as men. Data scienti
 
 ```{r fig.width=12}
 df %>%
-    filter(!is.na(Gender)) %>%
-    mutate(Gender = case_when(
-        str_detect(Gender, "Non-binary") ~ 
-            "Non-binary, genderqueer, \n or gender non-conforming",
-        TRUE ~ Gender
-    )) %>%
+    filter(!is.na(Gender), Gender != "Not available") %>%
     ggplot(aes(x = DevType, y = ConvertedComp, colour = DevType)) + 
     geom_boxplot(outlier.colour = NA) + 
     facet_wrap(~factor(Gender, levels = c("Man", 
                                           "Woman", 
-                                          "Non-binary, genderqueer, \n or gender non-conforming"))) +
+                                          "Non-binary, genderqueer, or gender non-conforming"))) +
     theme_minimal(base_size = 12) +
     geom_jitter(alpha = 0.3, width = 0.2) +
     scale_y_continuous(labels = scales::dollar_format()) +
@@ -152,17 +147,11 @@ df %>%
     devtype_scale_colour()
 
 df %>%
-    mutate(Gender = case_when(
-        str_detect(Gender, "Non-binary") ~ 
-            "Non-binary/genderqueer/gender non-conforming",
-        is.na(Gender) ~ "Not available",
-        TRUE ~ Gender
-    )) %>%
     tabyl(DevType, Gender) %>%
     adorn_percentages("row") %>%
     adorn_pct_formatting() %>%
     adorn_ns() %>%
-    select(DevType, Man, Woman, `Non-binary/genderqueer/gender non-conforming`, `Not available`) %>%
+    select(DevType, Man, Woman, `Non-binary, genderqueer, or gender non-conforming`, `Not available`) %>%
     kableExtra::kable()
 
 ```
@@ -212,23 +201,6 @@ Median salary was higher for data scientists at each aggregated qualification le
 ```{r}
 ed_boxplot <- df %>%
     filter(!is.na(EdLevel)) %>%
-    mutate(
-    EdLevel = fct_collapse(EdLevel,
-      `Less than bachelor's` = c(
-        "I never completed any formal education",
-        "Primary/elementary school",
-        "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
-        "Some college/university study without earning a degree",
-        "Associate degree"
-      ),
-      `Bachelor's degree` = "Bachelor’s degree (BA, BS, B.Eng., etc.)",
-      `Graduate degree` = c(
-        "Other doctoral degree (Ph.D, Ed.D., etc.)",
-        "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
-        "Professional degree (JD, MD, etc.)"
-      )
-    )
-    ) %>%
     ggplot(aes(x = EdLevel, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(labels = scales::dollar_format()) +
@@ -267,13 +239,6 @@ Median salaries were similar between respondents who develope professionally and
 
 ```{r}
 prof_boxplot <- df %>%
-    mutate(
-        MainBranch = case_when(
-            str_detect("I am a developer by profession", 
-                       MainBranch) ~ "Professional developer",
-            TRUE ~ "Not professional developer"
-        )
-    ) %>%
     ggplot(aes(x = MainBranch, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
@@ -291,14 +256,6 @@ prof_boxplot <- df %>%
 
 org_boxplot <- df %>%
     filter(!is.na(OrgSize)) %>%
-    mutate(
-     OrgSize = fct_collapse(OrgSize,
-        `Between 2 and 99` = c("2-9 employees", "10 to 19 employees", "20 to 99 employees"),
-        `Between 100 and 999` = c("100 to 499 employees", "500 to 999 employees"),
-        `Between 1,000 and 4,999` = "1,000 to 4,999 employees",
-        `5,000 or more` = c("5,000 to 9,999 employees", "10,000 or more employees")
-        )
-    ) %>%
     mutate(
         OrgSize = factor(OrgSize,
                          levels = c(
@@ -428,18 +385,9 @@ Finally, the plot below shows that open source contributions have a small positi
 
 ```{r}
 df %>%
-    mutate(OpenSourcer = fct_collapse(OpenSourcer,
-      Never = "Never",
-      Sometimes = "Less than once per year",
-      Often = c(
-        "Less than once a month but more than once per year",
-        "Once a month or more often"
-      )
-    )
-    ) %>%
-        ggplot(aes(x = OpenSourcer, y = log10(ConvertedComp), colour = DevType)) + 
-        geom_boxplot() +
-        labs(
+      ggplot(aes(x = OpenSourcer, y = log10(ConvertedComp), colour = DevType)) + 
+      geom_boxplot() +
+      labs(
             y = "Log10 Salary (USD)",
             x = ""
         ) +

@@ -96,7 +96,7 @@ Woman
 
 <th style="text-align:left;">
 
-Non-binary/genderqueer/gender non-conforming
+Non-binary, genderqueer, or gender non-conforming
 
 </th>
 
