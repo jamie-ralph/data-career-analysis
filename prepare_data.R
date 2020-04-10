@@ -9,6 +9,7 @@ data_ft <- read_csv("survey_results_public.csv") %>%
     filter(Employment == "Employed full-time",
            ConvertedComp >= 3e4,
            ConvertedComp <= 3e5,
+           Age >= 18,
            Country == "United States"
     )
 
