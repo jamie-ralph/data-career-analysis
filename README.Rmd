@@ -146,25 +146,16 @@ df %>%
     ) +
     devtype_scale_colour()
 
-df %>%
-    tabyl(DevType, Gender) %>%
-    adorn_percentages("row") %>%
-    adorn_pct_formatting() %>%
-    adorn_ns() %>%
-    select(DevType, Man, Woman, `Non-binary, genderqueer, or gender non-conforming`, `Not available`) %>%
-    kableExtra::kable()
-
 ```
 
-#### Do salaries increase with age?
+#### Do salaries increase with age, or is it about experience?
 
-The median age of the sample was `r median(df$Age, na.rm = T)`. The distributions of ages were positively skewed. If we plot a basic linear regression line we can see that salary increases with age. This can be expected if people who are older have more experience, something I'll look at shortly. 
+We would expect that salaries will increase with age and years of professional experience as respondents move into more senior developer roles. The ridge plots below show that age and years of professional coding are distributed non-normally with a positive skew. Typically we can log-transform skewed variables to make them more suitable for fitting statistical models. 
 
 ```{r, fig.width=12}
 hist_age <- df %>%
-    ggplot(aes(x = Age, fill = DevType, colour = DevType)) +
-    geom_histogram(bins = 100) +
-    
+    ggplot(aes(x = Age, y = DevType, fill = DevType, colour = DevType)) +
+    ggridges::geom_density_ridges() +
     theme_minimal(base_size = 12) +
     devtype_scale_fill() +
     devtype_scale_colour() +
@@ -174,24 +165,72 @@ hist_age <- df %>%
     theme(
         legend.position = "none"
     )
-    
+
+hist_exp <-  df %>%
+  mutate(
+    YearsCodePro = case_when(
+      YearsCodePro == "Less than 1 year" ~ "0",
+      TRUE ~ YearsCodePro
+    ),
+    YearsCodePro = as.numeric(YearsCodePro)
+  ) %>%
+  ggplot(aes(x = YearsCodePro, y = DevType, fill = DevType, colour = DevType)) +
+  ggridges::geom_density_ridges()  +
+    theme_minimal(base_size = 12) +
+    devtype_scale_fill() +
+    devtype_scale_colour() +
+    labs(
+        x = "Years of professional coding",
+        y = "Number of respondents"
+    ) +
+    theme(
+        legend.position = "none"
+    )
+
+
 
 scatter_age <- df %>%
     filter(Age >= 18) %>%
-    ggplot(aes(x = Age, y = log10(ConvertedComp), colour = DevType)) +
+    ggplot(aes(x = log10(Age), y = log10(ConvertedComp), colour = DevType)) +
     theme_minimal(base_size = 12) +
     guides(colour = guide_legend(override.aes = list(size = 5))) +
     geom_point() +
     geom_smooth(method = "lm", se = FALSE, size = 1.5) +
     labs(
+        x = "Log10 Age",
         y = "Log10 Salary (USD)"
     ) +
     scale_y_continuous(labels = scales::dollar_format()) +
     devtype_scale_colour() 
-   # facet_wrap(~DevType)
 
-hist_age + scatter_age
+scatter_exp <- df %>%
+  mutate(
+    YearsCodePro = case_when(
+      YearsCodePro == "Less than 1 year" ~ "0",
+      TRUE ~ YearsCodePro
+    ),
+    YearsCodePro = as.numeric(YearsCodePro)
+  ) %>%
+  ggplot(aes(x = log10(YearsCodePro), y = log10(ConvertedComp), colour = DevType)) +
+  geom_point() +
+  theme_minimal(base_size = 12) +
+  guides(colour = guide_legend(override.aes = list(size = 5))) +
+  geom_smooth(method = "lm", se = FALSE, size = 1.5) +
+    labs(
+        x = "Log10 Years of professional coding",
+        y = "Log10 Salary (USD)"
+    ) +
+    scale_y_continuous(labels = scales::dollar_format()) +
+    devtype_scale_colour() 
+  
+  
+
+(hist_age + hist_exp) / (scatter_age + scatter_exp)
 ```
+<br>
+
+The scatter plot on the right shows that log transforming years of professional coding doesn't quite work for the lower end of the scale. The transformed age plot on the left looks much cleaner and shows a positive relationship between log age and log salary. 
+
 
 #### Does education affect future salaries?
 
@@ -200,6 +239,23 @@ Median salary was higher for data scientists at each aggregated qualification le
 
 ```{r}
 ed_boxplot <- df %>%
+  mutate(
+  EdLevel = fct_collapse(EdLevel,
+                               `Less than bachelor's` = c(
+                                   "I never completed any formal education",
+                                   "Primary/elementary school",
+                                   "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
+                                   "Some college/university study without earning a degree",
+                                   "Associate degree"
+                               ),
+                               `Bachelor's degree` = "Bachelor’s degree (BA, BS, B.Eng., etc.)",
+                               `Graduate degree` = c(
+                                   "Other doctoral degree (Ph.D, Ed.D., etc.)",
+                                   "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
+                                   "Professional degree (JD, MD, etc.)"
+                               )
+              )
+  ) %>%
     filter(!is.na(EdLevel)) %>%
     ggplot(aes(x = EdLevel, y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
@@ -227,8 +283,6 @@ ed_table <- df %>%
 ed_boxplot 
 
 ed_table
-
-
 
 ```
 
@@ -306,39 +360,11 @@ df %>%
   
 ```
 
-#### Does coding experience affect salary?
-
-If we take the median salary for each year of professional coding experience, we see a positive relationship in the data analyst group. The data scientist group is more scattered as years of professional coding experience goes above 25. 
+#### Does knowing more programming languages relate to salary?
 
 
-```{r fig.width=12}
-df %>%
-  filter(YearsCodePro != "Less than 1 year") %>%
-  mutate(
-    YearsCodePro = as.numeric(YearsCodePro)
-  ) %>%
-  group_by(DevType, YearsCodePro) %>%
-  summarise(med_salary = median(ConvertedComp)) %>%
-  ggplot(aes(x = YearsCodePro, y = med_salary)) +
-  geom_point(size = 2.5, aes(colour = DevType)) +
-  scale_y_continuous(
-    labels = scales::dollar_format()
-  ) +
-  labs(
-    x = "Years coding professionally",
-    y = "Median salary (USD)"
-  ) +
-  theme_minimal(base_size = 12) +
-  devtype_scale_colour() +
-  facet_wrap(~DevType) 
+The number of programming languages used had a small positive effect on median earnings in the data analyst group, however the effect was somewhat negative in the data scientist group. 
 
-
-
-
-
-```
-
-The number of programming languages used had a small positive effect on median earnings in the data analyst group, however the effect was somewhat negative in the data scientist group.
 
 ```{r fig.width=12}
 langs_used <- df %>%

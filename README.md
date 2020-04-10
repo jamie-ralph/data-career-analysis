@@ -34,10 +34,10 @@ still leaves a good sample size.
 
 Respondents were labelled as data analysts if they identified as a “Data
 or business analyst” or a data scientist if identifying as “Data
-scientist or machine learning specialist”. 166 respondents identified
+scientist or machine learning specialist”. 162 respondents identified
 with both labels. These responses were removed to focus the analysis on
-the differences between the two groups. This left 871 responses,
-consisting of 346 data scientists and 525 data analysts.
+the differences between the two groups. This left 821 responses,
+consisting of 323 data scientists and 498 data analysts.
 
 ### Part 1 - Exploring the data
 
@@ -49,7 +49,7 @@ some additional variables I was interested in.
 #### What do data scientists and data analysts earn?
 
 If we take a look at salaries overall, the median salary is higher for
-data scientists ($120,000) than for data analysts ($84,000). Salaries
+data scientists ($120,000) than for data analysts ($84,500). Salaries
 for both groups are positively skewed due to small number of respondents
 earning about $150,000 or more. For modelling purposes the salaries will
 be log10 transformed to make them more normally distributed.
@@ -70,128 +70,21 @@ trans.
 
 ![](README_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-<table>
+#### Do salaries increase with age, or is it about experience?
 
-<thead>
+We would expect that salaries will increase with age and years of
+professional experience as respondents move into more senior developer
+roles. The ridge plots below show that age and years of professional
+coding are distributed non-normally with a positive skew. Typically we
+can log-transform skewed variables to make them more suitable for
+fitting statistical models.
 
-<tr>
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> <br>
 
-<th style="text-align:left;">
-
-DevType
-
-</th>
-
-<th style="text-align:left;">
-
-Man
-
-</th>
-
-<th style="text-align:left;">
-
-Woman
-
-</th>
-
-<th style="text-align:left;">
-
-Non-binary, genderqueer, or gender non-conforming
-
-</th>
-
-<th style="text-align:left;">
-
-Not available
-
-</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td style="text-align:left;">
-
-Data analyst
-
-</td>
-
-<td style="text-align:left;">
-
-86.3% (453)
-
-</td>
-
-<td style="text-align:left;">
-
-10.1% (53)
-
-</td>
-
-<td style="text-align:left;">
-
-1.7% (9)
-
-</td>
-
-<td style="text-align:left;">
-
-1.9% (10)
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Data scientist
-
-</td>
-
-<td style="text-align:left;">
-
-84.4% (292)
-
-</td>
-
-<td style="text-align:left;">
-
-11.3% (39)
-
-</td>
-
-<td style="text-align:left;">
-
-1.4% (5)
-
-</td>
-
-<td style="text-align:left;">
-
-2.9% (10)
-
-</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-#### Do salaries increase with age?
-
-The median age of the sample was 31. The distributions of ages were
-positively skewed. If we plot a basic linear regression line we can see
-that salary increases with age. This can be expected if people who are
-older have more experience, something I’ll look at shortly.
-
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+The scatter plot on the right shows that log transforming years of
+professional coding doesn’t quite work for the lower end of the scale.
+The transformed age plot on the left looks much cleaner and shows a
+positive relationship between log age and log salary.
 
 #### Does education affect future salaries?
 
@@ -257,13 +150,13 @@ Data scientist
 
 <td style="text-align:right;">
 
-68
+63
 
 </td>
 
 <td style="text-align:left;">
 
-$136,750
+$130,000
 
 </td>
 
@@ -285,7 +178,7 @@ Data scientist
 
 <td style="text-align:right;">
 
-35
+30
 
 </td>
 
@@ -313,41 +206,13 @@ Data scientist
 
 <td style="text-align:right;">
 
-159
+149
 
 </td>
 
 <td style="text-align:left;">
 
 $115,000
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="text-align:left;">
-
-Computer science, computer engineering, or software engineering
-
-</td>
-
-<td style="text-align:left;">
-
-Data analyst
-
-</td>
-
-<td style="text-align:right;">
-
-204
-
-</td>
-
-<td style="text-align:left;">
-
-$88,000
 
 </td>
 
@@ -369,13 +234,13 @@ Data analyst
 
 <td style="text-align:right;">
 
-61
+55
 
 </td>
 
 <td style="text-align:left;">
 
-$86,000
+$90,000
 
 </td>
 
@@ -385,7 +250,7 @@ $86,000
 
 <td style="text-align:left;">
 
-Another engineering discipline (ex. civil, electrical, mechanical)
+Computer science, computer engineering, or software engineering
 
 </td>
 
@@ -397,13 +262,13 @@ Data analyst
 
 <td style="text-align:right;">
 
-30
+197
 
 </td>
 
 <td style="text-align:left;">
 
-$85,750
+$88,000
 
 </td>
 
@@ -425,7 +290,7 @@ Data analyst
 
 <td style="text-align:right;">
 
-47
+45
 
 </td>
 
@@ -453,13 +318,13 @@ Data analyst
 
 <td style="text-align:right;">
 
-37
+36
 
 </td>
 
 <td style="text-align:left;">
 
-$73,000
+$72,500
 
 </td>
 
@@ -484,20 +349,13 @@ the large number of respondents on the 40 hours line.
 
 ![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-#### Does coding experience affect salary?
-
-If we take the median salary for each year of professional coding
-experience, we see a positive relationship in the data analyst group.
-The data scientist group is more scattered as years of professional
-coding experience goes above 25.
-
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+#### Does knowing more programming languages relate to salary?
 
 The number of programming languages used had a small positive effect on
 median earnings in the data analyst group, however the effect was
 somewhat negative in the data scientist group.
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
 
 #### Do open source contributors earn more?
 
@@ -505,4 +363,4 @@ Finally, the plot below shows that open source contributions have a
 small positive effect on median salaries in the data scientist group but
 less of an effect in the data analyst group.
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
