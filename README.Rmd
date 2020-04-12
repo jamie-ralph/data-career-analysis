@@ -1,15 +1,118 @@
 ---
 title: "Stack Overflow Developer Survey 2019: Exploring the characteristics of data scientists and data analysts"
 output:
-    github_document:
-        html_preview: true
+    github_document
 ---
 <br>
 
+```{r data-prep, include=F}
+
+### Data preparation script ### 
+library(tidyverse)
+library(janitor)
+library(patchwork)
+
+# Read in the data
+
+data_ft <- read_csv("survey_results_public.csv") %>%
+    filter(Employment == "Employed full-time",
+           ConvertedComp >= 3e4,
+           ConvertedComp <= 3e5,
+           Age >= 18,
+           Country == "United States"
+    )
+
+# Identify managers and academics
+
+managers <- data_ft %>%
+    filter(str_detect(DevType, "Engineering manager|Product manager|Senior executive/VP"))
+
+academics <- data_ft %>%
+    filter(str_detect(DevType, "Academic researcher|Scientist|Educator"))
+
+# Filter to data scientists and data analysts only
+
+data_jobs <- data_ft %>% 
+    anti_join(managers) %>%
+    anti_join(academics) %>%
+    mutate(DevType = str_split(DevType, pattern = ";")) %>%
+    unnest(DevType) %>%
+    mutate(DevType = case_when(
+        str_detect(str_to_lower(DevType), "data scientist") ~ "Data scientist",
+        str_detect(str_to_lower(DevType), "data or business") ~ "Data analyst",
+        TRUE ~ "Other") ) %>%
+    filter(DevType != "Other")
+
+
+
+# Filter df to people who selected both job types, then anti join to get
+# respondents who selected one job type
+
+both_jobs <- data_jobs %>%
+    group_by(Respondent) %>%
+    summarise(Count = n()) %>%
+    filter(Count > 1) %>%
+    select(-Count)
+
+df <- data_jobs %>%
+    anti_join(both_jobs)
+
+
+# Some additional data wrangling to make working with categorical data easier
+
+df <- df %>%
+    mutate(
+        Gender = case_when(
+        str_detect(Gender, "Non-binary") ~ 
+            "Non-binary, genderqueer, or gender non-conforming",
+        is.na(Gender) ~ "Not available",
+        TRUE ~ Gender),
+        MainBranch = case_when(
+            str_detect("I am a developer by profession", 
+                       MainBranch) ~ "Professional developer",
+            TRUE ~ "Not professional developer"
+        ),
+        OrgSize = fct_collapse(OrgSize,
+                               `Between 2 and 99` = c("2-9 employees", "10 to 19 employees", "20 to 99 employees"),
+                               `Between 100 and 999` = c("100 to 499 employees", "500 to 999 employees"),
+                               `Between 1,000 and 4,999` = "1,000 to 4,999 employees",
+                               `5,000 or more` = c("5,000 to 9,999 employees", "10,000 or more employees")
+        ),
+        OpenSourcer = fct_collapse(OpenSourcer,
+                                   Never = "Never",
+                                   Sometimes = "Less than once per year",
+                                   Often = c(
+                                       "Less than once a month but more than once per year",
+                                       "Once a month or more often"
+                                   )
+            )
+    )
+
+df <- df %>%
+    mutate(
+    EdLevel = case_when(
+        EdLevel %in% c(
+            "I never completed any formal education",
+            "Primary/elementary school",
+            "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
+            "Some college/university study without earning a degree",
+            "Associate degree"
+        ) ~ "Less than bachelors",
+        EdLevel == "Bachelor’s degree (BA, BS, B.Eng., etc.)" ~ "Bachelors degree",
+        EdLevel %in% c(
+            "Other doctoral degree (Ph.D, Ed.D., etc.)",
+            "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
+            "Professional degree (JD, MD, etc.)"
+        ) ~ "Graduate degree",
+        TRUE ~ EdLevel
+    )
+    )
+
+
+```
+
 ```{r prep, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
-
-source("prepare_data.r")
 
 devtype_scale_colour <- function() {
     scale_colour_manual(breaks = c("Data analyst", "Data scientist"),
@@ -33,7 +136,10 @@ Mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
 }
+
+
 ```
+
 
 In this project I'll be exploring survey responses from data scientists and data analysts in [Stack Overflow's 2019 Developer Survey](https://insights.stackoverflow.com/survey/2019#overview). I'll be using the survey responses to build statistical models of industry salaries. This project reuses code from Julia Silge's brilliant analysis of [gender and salary in the tech industry](https://juliasilge.com/blog/salary-gender/). 
 
@@ -238,26 +344,29 @@ Median salary was higher for data scientists at each aggregated qualification le
 
 
 ```{r}
+levels = c("Less than bachelors", "Bachelors degree", "Graduate degree")
+
 ed_boxplot <- df %>%
   mutate(
-  EdLevel = fct_collapse(EdLevel,
-                               `Less than bachelor's` = c(
+    EdLevel = case_when(
+                       EdLevel %in% c(
                                    "I never completed any formal education",
                                    "Primary/elementary school",
                                    "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
                                    "Some college/university study without earning a degree",
                                    "Associate degree"
-                               ),
-                               `Bachelor's degree` = "Bachelor’s degree (BA, BS, B.Eng., etc.)",
-                               `Graduate degree` = c(
+                               ) ~ "Less than bachelors",
+                               EdLevel == "Bachelor’s degree (BA, BS, B.Eng., etc.)" ~ "Bachelors degree",
+                               EdLevel %in% c(
                                    "Other doctoral degree (Ph.D, Ed.D., etc.)",
                                    "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
                                    "Professional degree (JD, MD, etc.)"
-                               )
-              )
+                               ) ~ "Graduate degree",
+                       TRUE ~ EdLevel
+        )
   ) %>%
     filter(!is.na(EdLevel)) %>%
-    ggplot(aes(x = EdLevel, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = factor(EdLevel, levels = levels), y = ConvertedComp, colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(labels = scales::dollar_format()) +
     theme_minimal(base_size = 12) +
@@ -288,12 +397,12 @@ ed_table
 
 #### Do employment variables affect salary?
 
-Median salaries were similar between respondents who develope professionally and those who don't develop professionally. There was an upward trend of salary ranges as organisation size increased. 
+Median salaries were similar between respondents who develope professionally and those who don't develop professionally. There was a small upward trend of salary ranges as organisation size increased. 
 <br>
 
 ```{r}
 prof_boxplot <- df %>%
-    ggplot(aes(x = MainBranch, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = MainBranch, y = log10(ConvertedComp), colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
         labels = scales::dollar_format()
@@ -301,7 +410,7 @@ prof_boxplot <- df %>%
     theme_minimal() +
   labs(
     x = "",
-    y = "Salary (USD)"
+    y = "Log10 Salary (USD)"
   ) +
   theme(
     legend.position = "none"
@@ -319,14 +428,14 @@ org_boxplot <- df %>%
         "5,000 or more")
         )
     ) %>%
-    ggplot(aes(x = OrgSize, y = ConvertedComp, colour = DevType)) +
+    ggplot(aes(x = OrgSize, y = log10(ConvertedComp), colour = DevType)) +
     geom_boxplot() +
     scale_y_continuous(
         labels = scales::dollar_format()
     ) +
     labs(
       x = "Organisation size (employees)",
-      y = "Salary (USD)"
+      y = "Log10 Salary (USD)"
     ) +
     theme_minimal() +
     devtype_scale_colour() +
@@ -383,18 +492,20 @@ langs_used <- df %>%
 
 df %>%
     inner_join(langs_used, by = "Respondent") %>%
+    mutate(
+      log_salary = log10(ConvertedComp)
+    ) %>%
     group_by(DevType, languages_used) %>%
-    summarise(med_salary = median(ConvertedComp)) %>%
-    ggplot(aes(x = languages_used, y = med_salary)) +
+    summarise(med_log_salary = median(log_salary)) %>%
+    ggplot(aes(x = languages_used, y = med_log_salary)) +
     geom_line(alpha = 0.5, size = 2, aes(colour = DevType)) +
     theme_minimal(base_size = 12) +
     labs(
         x = "Number of programming languages used \n (capped at 10)",
-        y = "Median salary (USD)"
+        y = "Median log10 salary (USD)"
     ) +
     scale_y_continuous(
-        labels = scales::dollar_format(),
-        limits = c(0, 150000)
+        labels = scales::dollar_format()
     ) +
     scale_x_continuous(
         breaks = 1:10,
@@ -407,7 +518,7 @@ df %>%
 
 #### Do open source contributors earn more?
 
-Finally, the plot below shows that open source contributions have a small positive effect on median salaries in the data scientist group but less of an effect in the data analyst group. 
+Finally, the plot below shows that open source contributions have a small positive effect on median salaries in the data scientist group but not in the data analyst group. 
 
 ```{r}
 df %>%
@@ -421,3 +532,64 @@ df %>%
     facet_wrap(~DevType) +
     devtype_scale_colour()
 ```
+
+### Part 2 - Building a model
+
+#### Multiple regression output
+
+It's clear that salaries are highly variable whichever way we look at the data. The exploratory data analysis we've done so far suggests that some variables could explain some of the variation in salaries, and this is where modelling comes in! Here I'll try a multiple regression to model salary on **developer type**, **professional vs. non-professional developer**, **log transformed age**, **education level**, and **open source contributions**, including some interaction terms based on the EDA. 
+```{r}
+library(moderndive)
+
+# Fit a simple linear regression
+
+model_data <- df %>%
+    select(ConvertedComp, Age, DevType, EdLevel, OrgSize, OpenSourcer, MainBranch) %>%
+    mutate(log_salary = log10(ConvertedComp),
+           log_age = log10(Age)) %>%
+    select(-ConvertedComp, -Age)
+
+
+simple_lm <- lm(log_salary ~ log_age + DevType * OpenSourcer + DevType * EdLevel + DevType * MainBranch, data = model_data)
+
+```
+
+```{r}
+
+simple_lm %>%
+  get_regression_summaries() %>%
+  kableExtra::kable()
+
+simple_lm %>%
+  get_regression_table() %>%
+  kableExtra::kable()
+```
+
+Given the variability in the data, an adjusted R-squared of 0.31 isn't bad! The model has accounted for about 31% of the variance in salary. The one continuous variable in the model (log of age) has a significant positive effect on average log of salary. There is also a significant positive effect of being a data scientist on the average log of salary. There is a significant negative effect of not having at least a bachelor's degree for data analysts but not for data scientists. On average, being a professional developer significantly increases log of salary for data analysts but does not have an effect on data scientist salaries. Open source contributions didn't have an effect on log of salary in either group. 
+
+#### Everybody's favourite - checking assumptions
+
+It's important to check that the regression has met the underlying assumptions before drawing conclusions:
+
+* **Linearity** of relationships between independent and dependent variables - we can be satisfied this assumption is met by looking at the EDA plots and by checking that there is no pattern when plotting fitted values against residuals
+* **Independence** of residuals - responses come from different individuals, so we meet this criterion
+* **Normality of residuals** - the normal Q-Q below shows our residuals are distributed normally across log of salary
+* **Homogeneity of variance** - we can check this assumption using a scale-location plot and checking there is no linear pattern, which is what we find here
+
+We can also check the Residuals vs Leverage plot to make sure outliers are not significantly affecting the regression coefficients. The plot here doesn't show any observations outside of Cook's distance, so we can assume that outliers aren't having a large impact on the model. 
+
+```{r fig.width=12}
+par(mfrow = c(1, 2))
+plot(simple_lm, which = 1:2)
+
+```
+
+```{r fig.width=12}
+
+par(mfrow = c(1, 2))
+plot(simple_lm, which = c(3, 5))
+```
+
+### Conclusion
+
+This project was a lot of fun to work through! There are clearly many factors that can influence data scientist and data analyst salaries that weren't captured here, but we did find a positive effect of age and some interesting interactions between developer type, education level, and whether or not a person is a professional developer. There are some further analyses we could do to improve on the multiple regression model we built here, for example a linear mixed effects model including organisation size and undergraduate major as random effects (this model is covered Julia Silge's post). 

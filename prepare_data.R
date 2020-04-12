@@ -58,22 +58,6 @@ df <- df %>%
             "Non-binary, genderqueer, or gender non-conforming",
         is.na(Gender) ~ "Not available",
         TRUE ~ Gender),
-        EdLevel = case_when(
-                       EdLevel %in% c(
-                                   "I never completed any formal education",
-                                   "Primary/elementary school",
-                                   "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
-                                   "Some college/university study without earning a degree",
-                                   "Associate degree"
-                               ) ~ "Less than bachelors",
-                               EdLevel == "Bachelor’s degree (BA, BS, B.Eng., etc.)" ~ "Bachelors degree",
-                               EdLevel %in% c(
-                                   "Other doctoral degree (Ph.D, Ed.D., etc.)",
-                                   "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
-                                   "Professional degree (JD, MD, etc.)"
-                               ) ~ "Graduate degree",
-                       TRUE ~ EdLevel
-        ),
         MainBranch = case_when(
             str_detect("I am a developer by profession", 
                        MainBranch) ~ "Professional developer",
@@ -93,6 +77,26 @@ df <- df %>%
                                        "Once a month or more often"
                                    )
             )
+    )
+
+df <- df %>%
+    mutate(
+    EdLevel = case_when(
+        EdLevel %in% c(
+            "I never completed any formal education",
+            "Primary/elementary school",
+            "Secondary school (e.g. American high school, German Realschule or Gymnasium, etc.)",
+            "Some college/university study without earning a degree",
+            "Associate degree"
+        ) ~ "Less than bachelors",
+        EdLevel == "Bachelor’s degree (BA, BS, B.Eng., etc.)" ~ "Bachelors degree",
+        EdLevel %in% c(
+            "Other doctoral degree (Ph.D, Ed.D., etc.)",
+            "Master’s degree (MA, MS, M.Eng., MBA, etc.)",
+            "Professional degree (JD, MD, etc.)"
+        ) ~ "Graduate degree",
+        TRUE ~ EdLevel
+    )
     )
         
 levels(df$EdLevel) <- c("Less than bachelors", "Bachelors degree", "Graduate degree")

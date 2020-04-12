@@ -337,8 +337,8 @@ $72,500
 #### Do employment variables affect salary?
 
 Median salaries were similar between respondents who develope
-professionally and those who don’t develop professionally. There was an
-upward trend of salary ranges as organisation size increased. <br>
+professionally and those who don’t develop professionally. There was a
+small upward trend of salary ranges as organisation size increased. <br>
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
@@ -361,6 +361,841 @@ somewhat negative in the data scientist group.
 
 Finally, the plot below shows that open source contributions have a
 small positive effect on median salaries in the data scientist group but
-less of an effect in the data analyst group.
+not in the data analyst group.
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+### Part 2 - Building a model
+
+#### Multiple regression output
+
+It’s clear that salaries are highly variable whichever way we look at
+the data. The exploratory data analysis we’ve done so far suggests that
+some variables could explain some of the variation in salaries, and this
+is where modelling comes in\! Here I’ll try a multiple regression to
+model salary on **developer type**, **professional vs. non-professional
+developer**, **log transformed age**, **education level**, and **open
+source contributions**, including some interaction terms based on the
+EDA.
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:right;">
+
+r\_squared
+
+</th>
+
+<th style="text-align:right;">
+
+adj\_r\_squared
+
+</th>
+
+<th style="text-align:right;">
+
+mse
+
+</th>
+
+<th style="text-align:right;">
+
+rmse
+
+</th>
+
+<th style="text-align:right;">
+
+sigma
+
+</th>
+
+<th style="text-align:right;">
+
+statistic
+
+</th>
+
+<th style="text-align:right;">
+
+p\_value
+
+</th>
+
+<th style="text-align:right;">
+
+df
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:right;">
+
+0.321
+
+</td>
+
+<td style="text-align:right;">
+
+0.311
+
+</td>
+
+<td style="text-align:right;">
+
+0.0215973
+
+</td>
+
+<td style="text-align:right;">
+
+0.1469603
+
+</td>
+
+<td style="text-align:right;">
+
+0.148
+
+</td>
+
+<td style="text-align:right;">
+
+31.408
+
+</td>
+
+<td style="text-align:right;">
+
+0
+
+</td>
+
+<td style="text-align:right;">
+
+13
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th style="text-align:left;">
+
+term
+
+</th>
+
+<th style="text-align:right;">
+
+estimate
+
+</th>
+
+<th style="text-align:right;">
+
+std\_error
+
+</th>
+
+<th style="text-align:right;">
+
+statistic
+
+</th>
+
+<th style="text-align:right;">
+
+p\_value
+
+</th>
+
+<th style="text-align:right;">
+
+lower\_ci
+
+</th>
+
+<th style="text-align:right;">
+
+upper\_ci
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="text-align:left;">
+
+intercept
+
+</td>
+
+<td style="text-align:right;">
+
+3.996
+
+</td>
+
+<td style="text-align:right;">
+
+0.076
+
+</td>
+
+<td style="text-align:right;">
+
+52.578
+
+</td>
+
+<td style="text-align:right;">
+
+0.000
+
+</td>
+
+<td style="text-align:right;">
+
+3.847
+
+</td>
+
+<td style="text-align:right;">
+
+4.145
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+log\_age
+
+</td>
+
+<td style="text-align:right;">
+
+0.601
+
+</td>
+
+<td style="text-align:right;">
+
+0.050
+
+</td>
+
+<td style="text-align:right;">
+
+11.900
+
+</td>
+
+<td style="text-align:right;">
+
+0.000
+
+</td>
+
+<td style="text-align:right;">
+
+0.502
+
+</td>
+
+<td style="text-align:right;">
+
+0.700
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+DevTypeData scientist
+
+</td>
+
+<td style="text-align:right;">
+
+0.173
+
+</td>
+
+<td style="text-align:right;">
+
+0.035
+
+</td>
+
+<td style="text-align:right;">
+
+4.902
+
+</td>
+
+<td style="text-align:right;">
+
+0.000
+
+</td>
+
+<td style="text-align:right;">
+
+0.104
+
+</td>
+
+<td style="text-align:right;">
+
+0.243
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+OpenSourcerSometimes
+
+</td>
+
+<td style="text-align:right;">
+
+0.000
+
+</td>
+
+<td style="text-align:right;">
+
+0.020
+
+</td>
+
+<td style="text-align:right;">
+
+0.009
+
+</td>
+
+<td style="text-align:right;">
+
+0.993
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.039
+
+</td>
+
+<td style="text-align:right;">
+
+0.039
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+OpenSourcerNever
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.010
+
+</td>
+
+<td style="text-align:right;">
+
+0.018
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.568
+
+</td>
+
+<td style="text-align:right;">
+
+0.570
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.045
+
+</td>
+
+<td style="text-align:right;">
+
+0.025
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+EdLevelGraduate degree
+
+</td>
+
+<td style="text-align:right;">
+
+0.015
+
+</td>
+
+<td style="text-align:right;">
+
+0.018
+
+</td>
+
+<td style="text-align:right;">
+
+0.822
+
+</td>
+
+<td style="text-align:right;">
+
+0.411
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.021
+
+</td>
+
+<td style="text-align:right;">
+
+0.050
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+EdLevelLess than bachelors
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.075
+
+</td>
+
+<td style="text-align:right;">
+
+0.017
+
+</td>
+
+<td style="text-align:right;">
+
+\-4.441
+
+</td>
+
+<td style="text-align:right;">
+
+0.000
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.109
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.042
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+MainBranchProfessional developer
+
+</td>
+
+<td style="text-align:right;">
+
+0.051
+
+</td>
+
+<td style="text-align:right;">
+
+0.015
+
+</td>
+
+<td style="text-align:right;">
+
+3.496
+
+</td>
+
+<td style="text-align:right;">
+
+0.000
+
+</td>
+
+<td style="text-align:right;">
+
+0.022
+
+</td>
+
+<td style="text-align:right;">
+
+0.079
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+DevTypeData scientist:OpenSourcerSometimes
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.039
+
+</td>
+
+<td style="text-align:right;">
+
+0.029
+
+</td>
+
+<td style="text-align:right;">
+
+\-1.369
+
+</td>
+
+<td style="text-align:right;">
+
+0.171
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.096
+
+</td>
+
+<td style="text-align:right;">
+
+0.017
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+DevTypeData scientist:OpenSourcerNever
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.022
+
+</td>
+
+<td style="text-align:right;">
+
+0.027
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.817
+
+</td>
+
+<td style="text-align:right;">
+
+0.414
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.075
+
+</td>
+
+<td style="text-align:right;">
+
+0.031
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+DevTypeData scientist:EdLevelGraduate degree
+
+</td>
+
+<td style="text-align:right;">
+
+0.032
+
+</td>
+
+<td style="text-align:right;">
+
+0.025
+
+</td>
+
+<td style="text-align:right;">
+
+1.285
+
+</td>
+
+<td style="text-align:right;">
+
+0.199
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.017
+
+</td>
+
+<td style="text-align:right;">
+
+0.082
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+DevTypeData scientist:EdLevelLess than bachelors
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.004
+
+</td>
+
+<td style="text-align:right;">
+
+0.036
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.105
+
+</td>
+
+<td style="text-align:right;">
+
+0.916
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.074
+
+</td>
+
+<td style="text-align:right;">
+
+0.066
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="text-align:left;">
+
+DevTypeData scientist:MainBranchProfessional developer
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.051
+
+</td>
+
+<td style="text-align:right;">
+
+0.029
+
+</td>
+
+<td style="text-align:right;">
+
+\-1.732
+
+</td>
+
+<td style="text-align:right;">
+
+0.084
+
+</td>
+
+<td style="text-align:right;">
+
+\-0.109
+
+</td>
+
+<td style="text-align:right;">
+
+0.007
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+Given the variability in the data, an adjusted R-squared of 0.31 isn’t
+bad\! The model has accounted for about 31% of the variance in salary.
+The one continuous variable in the model (log of age) has a significant
+positive effect on average log of salary. There is also a significant
+positive effect of being a data scientist on the average log of salary.
+There is a significant negative effect of not having at least a
+bachelor’s degree for data analysts but not for data scientists. On
+average, being a professional developer significantly increases log of
+salary for data analysts but does not have an effect on data scientist
+salaries. Open source contributions didn’t have an effect on log of
+salary in either group.
+
+#### Everybody’s favourite - checking assumptions
+
+It’s important to check that the regression has met the underlying
+assumptions before drawing conclusions:
+
+  - **Linearity** of relationships between independent and dependent
+    variables - we can be satisfied this assumption is met by looking at
+    the EDA plots and by checking that there is no pattern when plotting
+    fitted values against residuals
+  - **Independence** of residuals - responses come from different
+    individuals, so we meet this criterion
+  - **Normality of residuals** - the normal Q-Q below shows our
+    residuals are distributed normally across log of salary
+  - **Homogeneity of variance** - we can check this assumption using a
+    scale-location plot and checking there is no linear pattern, which
+    is what we find here
+
+We can also check the Residuals vs Leverage plot to make sure outliers
+are not significantly affecting the regression coefficients. The plot
+here doesn’t show any observations outside of Cook’s distance, so we can
+assume that outliers aren’t having a large impact on the model.
+
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+### Conclusion
+
+This project was a lot of fun to work through\! There are clearly many
+factors that can influence data scientist and data analyst salaries that
+weren’t captured here, but we did find a positive effect of age and some
+interesting interactions between developer type, education level, and
+whether or not a person is a professional developer. There are some
+further analyses we could do to improve on the multiple regression model
+we built here, for example a linear mixed effects model including
+organisation size and undergraduate major as random effects (this model
+is covered Julia Silge’s post).
