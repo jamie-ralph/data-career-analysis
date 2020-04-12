@@ -7,10 +7,13 @@ data scientists and data analysts
 In this project I’ll be exploring survey responses from data scientists
 and data analysts in [Stack Overflow’s 2019 Developer
 Survey](https://insights.stackoverflow.com/survey/2019#overview). I’ll
-be using the survey responses to build statistical models of industry
-salaries. This project reuses code from Julia Silge’s brilliant analysis
-of [gender and salary in the tech
-industry](https://juliasilge.com/blog/salary-gender/).
+be using the survey responses to build a statistical model of industry
+salaries.
+
+This project reuses code from Julia Silge’s brilliant analysis of
+[gender and salary in the tech
+industry](https://juliasilge.com/blog/salary-gender/) - I highly
+recommend you check it out\!
 
 #### Preparing the data
 
@@ -51,15 +54,15 @@ some additional variables I was interested in.
 If we take a look at salaries overall, the median salary is higher for
 data scientists ($120,000) than for data analysts ($84,500). Salaries
 for both groups are positively skewed due to small number of respondents
-earning about $150,000 or more. For modelling purposes the salaries will
-be log10 transformed to make them more normally distributed.
+earning around $150,000 or more. For modelling purposes the salaries
+will be log10 transformed to make them normally distributed.
 ![](README_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 <br>
 
 #### Does salary differ by gender identity?
 
-The data shows that the majority of respondents indentified as men. Data
+The data shows that the majority of respondents identified as men. Data
 scientists had higher median salaries than data analysts across the
 gender groups. It’s possible that women are under-represented in this
 sample, an issue that has been identified for the survey across all
@@ -73,11 +76,11 @@ trans.
 #### Do salaries increase with age, or is it about experience?
 
 We would expect that salaries will increase with age and years of
-professional experience as respondents move into more senior developer
-roles. The ridge plots below show that age and years of professional
-coding are distributed non-normally with a positive skew. Typically we
-can log-transform skewed variables to make them more suitable for
-fitting statistical models.
+professional experience as respondents move into more senior roles. The
+ridge plots below show that age and years of professional coding are
+distributed non-normally with a positive skew. Typically we can
+log-transform skewed variables to make them more suitable for fitting
+statistical models.
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> <br>
 
@@ -336,9 +339,11 @@ $72,500
 
 #### Do employment variables affect salary?
 
-Median salaries were similar between respondents who develope
-professionally and those who don’t develop professionally. There was a
-small upward trend of salary ranges as organisation size increased. <br>
+There is an interesting interaction here: data analysts who are
+primarily professional developers have a higher median log of salary
+than those aren’t, but this effect is absent in the data scientist
+group. There was a very small upward trend of salary ranges as
+organisation size increased. <br>
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
@@ -376,7 +381,7 @@ is where modelling comes in\! Here I’ll try a multiple regression to
 model salary on **developer type**, **professional vs. non-professional
 developer**, **log transformed age**, **education level**, and **open
 source contributions**, including some interaction terms based on the
-EDA.
+exploratory plots.
 
 <table>
 
@@ -1151,18 +1156,17 @@ DevTypeData scientist:MainBranchProfessional developer
 </table>
 
 Given the variability in the data, an adjusted R-squared of 0.31 isn’t
-bad\! The model has accounted for about 31% of the variance in salary.
-The one continuous variable in the model (log of age) has a significant
-positive effect on average log of salary. There is also a significant
-positive effect of being a data scientist on the average log of salary.
-There is a significant negative effect of not having at least a
-bachelor’s degree for data analysts but not for data scientists. On
-average, being a professional developer significantly increases log of
-salary for data analysts but does not have an effect on data scientist
-salaries. Open source contributions didn’t have an effect on log of
-salary in either group.
+bad\! The model has accounted for about 31% of the variance in log of
+salary. The one continuous variable in the model (log of age) has a
+significant positive effect on average log of salary. There is also a
+significant positive effect of being a data scientist on the average log
+of salary. There is a significant negative effect of not having at least
+a bachelor’s degree for data analysts but not for data scientists. Being
+a professional developer significantly increases log of salary for data
+analysts but does not have an effect on data scientist salaries. Open
+source contributions didn’t have an effect in either group.
 
-#### Everybody’s favourite - checking assumptions
+#### Everybody’s favourite - checking assumptions\!
 
 It’s important to check that the regression has met the underlying
 assumptions before drawing conclusions:
@@ -1197,5 +1201,7 @@ interesting interactions between developer type, education level, and
 whether or not a person is a professional developer. There are some
 further analyses we could do to improve on the multiple regression model
 we built here, for example a linear mixed effects model including
-organisation size and undergraduate major as random effects (this model
-is covered Julia Silge’s post).
+organisation size and undergraduate major as random effects (this type
+of model is covered in Julia Silge’s post).
+
+**Thanks for reading :)**
