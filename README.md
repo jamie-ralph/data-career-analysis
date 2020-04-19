@@ -1201,7 +1201,4 @@ interesting interactions between developer type, education level, and
 whether or not a person is a professional developer. There are some
 further analyses we could do to improve on the multiple regression model
 we built here, for example a linear mixed effects model including
-organisation size and undergraduate major as random effects (this type
-of model is covered in Julia Silge’s post).
-
-**Thanks for reading :)**
+organisation size and undergraduate major as random effects.

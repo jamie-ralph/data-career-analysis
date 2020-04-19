@@ -594,6 +594,4 @@ plot(simple_lm, which = c(3, 5))
 
 ### Conclusion
 
-This project was a lot of fun to work through! There are clearly many factors that can influence data scientist and data analyst salaries that weren't captured here, but we did find a positive effect of age and some interesting interactions between developer type, education level, and whether or not a person is a professional developer. There are some further analyses we could do to improve on the multiple regression model we built here, for example a linear mixed effects model including organisation size and undergraduate major as random effects (this type of model is covered in Julia Silge's post). 
-
-**Thanks for reading :)**
+This project was a lot of fun to work through! There are clearly many factors that can influence data scientist and data analyst salaries that weren't captured here, but we did find a positive effect of age and some interesting interactions between developer type, education level, and whether or not a person is a professional developer. There are some further analyses we could do to improve on the multiple regression model we built here, for example a linear mixed effects model including organisation size and undergraduate major as random effects.
